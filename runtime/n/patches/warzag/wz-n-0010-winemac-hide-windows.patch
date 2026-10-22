@@ -1,0 +1,59 @@
+WARZAG_HIDE_WINDOWS=1 keeps a process's windows off the screen.
+
+show_window() never orders a window onto the screen, so the process never becomes a foreground app or gets a Dock
+icon; its windows still exist and the program keeps working. Warzag sets it for Digital Extremes' launcher when it
+only updates the game.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/dlls/winemac.drv/macdrv.h
++++ b/dlls/winemac.drv/macdrv.h
+@@ -168,6 +168,8 @@
+  * If that's desired in the future, the signatures need to use WINBOOL or the C bool type.
+  */
+ #ifndef __OBJC__
++extern BOOL warzag_hide_windows;
++
+ extern BOOL macdrv_ActivateKeyboardLayout(HKL hkl, UINT flags);
+ extern void macdrv_Beep(void);
+ extern LONG macdrv_ChangeDisplaySettings(LPDEVMODEW displays, LPCWSTR primary_name, HWND hwnd, DWORD flags, LPVOID lpvoid);
+--- a/dlls/winemac.drv/macdrv_main.c
++++ b/dlls/winemac.drv/macdrv_main.c
+@@ -376,6 +376,11 @@
+         if (value >= 0.5 && value <= 1.0) neutron_scale = value;
+     }
+ 
++    {
++        const char *env = getenv("WARZAG_HIDE_WINDOWS");
++        warzag_hide_windows = env && !strcmp(env, "1");
++    }
++
+     /* neutron: raw input from GCMouse, NEUTRON_RAW_MOUSE=0 keeps Wine's NSEvent deltas */
+     {
+         const char *env = getenv("NEUTRON_RAW_MOUSE");
+--- a/dlls/winemac.drv/window.c
++++ b/dlls/winemac.drv/window.c
+@@ -618,6 +618,8 @@
+ /***********************************************************************
+  *              show_window
+  */
++BOOL warzag_hide_windows = FALSE;
++
+ static void show_window(struct macdrv_win_data *data)
+ {
+     HWND prev = NULL;
+@@ -627,6 +629,14 @@
+     BOOL activate = FALSE;
+     GUITHREADINFO info;
+ 
++    /* WARZAG_HIDE_WINDOWS=1: no window is ordered onto the screen, so the process never becomes a foreground app
++       (no Dock icon); the windows still exist for the program. */
++    if (warzag_hide_windows)
++    {
++        TRACE("win %p/%p kept off screen (WARZAG_HIDE_WINDOWS)\n", data->hwnd, data->cocoa_window);
++        return;
++    }
++
+     /* find window that this one must be after */
+     prev = NtUserGetWindowRelative(data->hwnd, GW_HWNDPREV);
+     while (prev && !((NtUserGetWindowLongW(prev, GWL_STYLE) & (WS_VISIBLE | WS_MINIMIZE)) == WS_VISIBLE &&

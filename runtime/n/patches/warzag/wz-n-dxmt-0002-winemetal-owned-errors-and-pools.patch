@@ -1,0 +1,401 @@
+Own the NSErrors Metal returns, and run pipeline tasks and display queries in autorelease pools.
+
+Metal returns its NSError out-parameters autoreleased, and DXMT keeps each error in a WMT::Reference<WMT::Error>,
+which releases it: when a worker thread exits, its implicit pool releases errors that are already freed.
+winemetal_unix.c retains each returned error, Metal.hpp takes every NSError out-parameter as a Reference<Error>&
+released before the call writes it, and the pipeline tasks (d3d11_pipeline_cache.cpp) and per-Present display
+queries (winemetal_unix.c) run in autorelease pools. Applies after wz-n-dxmt-0001. Test: qa/n/pso-reject.sh.
+
+License: LGPL-2.1-or-later (a change to DXMT).
+
+diff --git a/src/d3d11/d3d11_pipeline_cache.cpp b/src/d3d11/d3d11_pipeline_cache.cpp
+index a4cf9a7..3bd2400 100644
+--- a/src/d3d11/d3d11_pipeline_cache.cpp
++++ b/src/d3d11/d3d11_pipeline_cache.cpp
+@@ -200,6 +200,9 @@ DxbcPixelOutputs(const void *pBytecode, size_t BytecodeLength, bool *writes_dept
+ 
+ template <> struct task_trait<ThreadpoolWork *> {
+   ThreadpoolWork *run_task(ThreadpoolWork *task) {
++    /* The workers are Windows threads without an autorelease pool: each task (shader variants, pipelines, priming)
++       runs in its own, drained after the task's own references. */
++    auto pool = WMT::MakeAutoreleasePool();
+     return task->RunThreadpoolWork();
+   }
+   bool get_done(ThreadpoolWork *task) { return task->GetIsDone(); }
+diff --git a/src/winemetal/Metal.hpp b/src/winemetal/Metal.hpp
+index 8224a0c..ab531ec 100644
+--- a/src/winemetal/Metal.hpp
++++ b/src/winemetal/Metal.hpp
+@@ -119,6 +119,15 @@ public:
+     this->release();
+     this->handle = NULL_OBJECT_HANDLE;
+   }
++
++  /* For a call that writes an owned handle, such as the NSError out-parameters winemetal.so returns retained. The
++     current value is released first: one Reference can take the errors of several calls, and a call that succeeds
++     writes 0. */
++  obj_handle_t *
++  releaseAndGetAddressOf() {
++    *this = nullptr;
++    return &this->handle;
++  }
+ };
+ 
+ template <typename Class> class Array : public Object {
+@@ -165,6 +174,8 @@ Object::description() {
+   return String{NSObject_description(handle)};
+ }
+ 
++/* The NSError out-parameters below are Reference<Error>&, which owns the error. CommandBuffer::error() returns the
++   command buffer's own error, unowned. */
+ class Error : public Object {
+ public:
+ };
+@@ -747,10 +758,10 @@ public:
+ 
+   Reference<Function>
+   newFunctionWithConstants(
+-      const char *name, const WMTFunctionConstant *constants, uint32_t num_constants, Error &error
++      const char *name, const WMTFunctionConstant *constants, uint32_t num_constants, Reference<Error> &error
+   ) {
+     return Reference<Function>(
+-        MTLLibrary_newFunctionWithConstants(handle, name, constants, num_constants, &error.handle)
++        MTLLibrary_newFunctionWithConstants(handle, name, constants, num_constants, error.releaseAndGetAddressOf())
+     );
+   }
+ };
+@@ -758,8 +769,8 @@ public:
+ class BinaryArchive : public Object {
+ public:
+   void
+-  serialize(const char *url, Error &error) {
+-    MTLBinaryArchive_serialize(handle, url, &error.handle);
++  serialize(const char *url, Reference<Error> &error) {
++    MTLBinaryArchive_serialize(handle, url, error.releaseAndGetAddressOf());
+   }
+ };
+ 
+@@ -825,33 +836,35 @@ public:
+   }
+ 
+   Reference<Library>
+-  newLibrary(const void *bytecode, uint64_t bytecode_length, Error &error) {
++  newLibrary(const void *bytecode, uint64_t bytecode_length, Reference<Error> &error) {
+     auto data = DispatchData_alloc_init((uint64_t)bytecode, bytecode_length);
+-    auto ret = Reference<Library>(MTLDevice_newLibrary(handle, data, &error.handle));
++    auto ret = Reference<Library>(MTLDevice_newLibrary(handle, data, error.releaseAndGetAddressOf()));
+     NSObject_release(data);
+     return ret;
+   }
+ 
+   Reference<Library>
+-  newLibraryFromNativeBuffer(uint64_t bytecode, uint64_t bytecode_length, Error &error) {
++  newLibraryFromNativeBuffer(uint64_t bytecode, uint64_t bytecode_length, Reference<Error> &error) {
+     auto data = DispatchData_alloc_init(bytecode, bytecode_length);
+-    auto ret = Reference<Library>(MTLDevice_newLibrary(handle, data, &error.handle));
++    auto ret = Reference<Library>(MTLDevice_newLibrary(handle, data, error.releaseAndGetAddressOf()));
+     NSObject_release(data);
+     return ret;
+   }
+ 
+   Reference<Library>
+-  newLibrary(DispatchData data, Error &error) {
+-    return Reference<Library>(MTLDevice_newLibrary(handle, data, &error.handle));
++  newLibrary(DispatchData data, Reference<Error> &error) {
++    return Reference<Library>(MTLDevice_newLibrary(handle, data, error.releaseAndGetAddressOf()));
+   }
+ 
+   Reference<Library>
+-  newLibraryWithSource(std::string_view view, Error &error) {
+-    return Reference<Library>(MTLDevice_newLibraryWithSource(handle, view.data(), view.length(), &error.handle));
++  newLibraryWithSource(std::string_view view, Reference<Error> &error) {
++    return Reference<Library>(
++        MTLDevice_newLibraryWithSource(handle, view.data(), view.length(), error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<ComputePipelineState>
+-  newComputePipelineState(const Function &compute_function, Error &error) {
++  newComputePipelineState(const Function &compute_function, Reference<Error> &error) {
+     WMTComputePipelineInfo info;
+     info.compute_function = compute_function;
+     info.tgsize_is_multiple_of_sgwidth = false;
+@@ -861,11 +874,15 @@ public:
+     info.num_binary_archives_for_lookup = 0;
+     info.fail_on_binary_archive_miss = false;
+     info.support_indirect_command_buffers = false;
+-    return Reference<ComputePipelineState>(MTLDevice_newComputePipelineState(handle, &info, &error.handle));
++    return Reference<ComputePipelineState>(
++        MTLDevice_newComputePipelineState(handle, &info, error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<ComputePipelineState>
+-  newComputePipelineState(const Function &compute_function, bool tgsize_is_multiple_of_sgwidth, Error &error) {
++  newComputePipelineState(
++      const Function &compute_function, bool tgsize_is_multiple_of_sgwidth, Reference<Error> &error
++  ) {
+     WMTComputePipelineInfo info;
+     info.compute_function = compute_function;
+     info.tgsize_is_multiple_of_sgwidth = tgsize_is_multiple_of_sgwidth;
+@@ -875,27 +892,37 @@ public:
+     info.num_binary_archives_for_lookup = 0;
+     info.fail_on_binary_archive_miss = false;
+     info.support_indirect_command_buffers = false;
+-    return Reference<ComputePipelineState>(MTLDevice_newComputePipelineState(handle, &info, &error.handle));
++    return Reference<ComputePipelineState>(
++        MTLDevice_newComputePipelineState(handle, &info, error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<RenderPipelineState>
+-  newRenderPipelineState(const WMTRenderPipelineInfo &info, Error &error) {
+-    return Reference<RenderPipelineState>(MTLDevice_newRenderPipelineState(handle, &info, &error.handle));
++  newRenderPipelineState(const WMTRenderPipelineInfo &info, Reference<Error> &error) {
++    return Reference<RenderPipelineState>(
++        MTLDevice_newRenderPipelineState(handle, &info, error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<ComputePipelineState>
+-  newComputePipelineState(const WMTComputePipelineInfo &info, Error &error) {
+-    return Reference<ComputePipelineState>(MTLDevice_newComputePipelineState(handle, &info, &error.handle));
++  newComputePipelineState(const WMTComputePipelineInfo &info, Reference<Error> &error) {
++    return Reference<ComputePipelineState>(
++        MTLDevice_newComputePipelineState(handle, &info, error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<RenderPipelineState>
+-  newRenderPipelineState(const WMTMeshRenderPipelineInfo &info, Error &error) {
+-    return Reference<RenderPipelineState>(MTLDevice_newMeshRenderPipelineState(handle, &info, &error.handle));
++  newRenderPipelineState(const WMTMeshRenderPipelineInfo &info, Reference<Error> &error) {
++    return Reference<RenderPipelineState>(
++        MTLDevice_newMeshRenderPipelineState(handle, &info, error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<RenderPipelineState>
+-  newRenderPipelineState(const WMTTileRenderPipelineInfo &info, Error &error) {
+-    return Reference<RenderPipelineState>(MTLDevice_newTileRenderPipelineState(handle, &info, &error.handle));
++  newRenderPipelineState(const WMTTileRenderPipelineInfo &info, Reference<Error> &error) {
++    return Reference<RenderPipelineState>(
++        MTLDevice_newTileRenderPipelineState(handle, &info, error.releaseAndGetAddressOf())
++    );
+   }
+ 
+   Reference<Fence>
+@@ -909,8 +936,8 @@ public:
+   }
+ 
+   Reference<ResidencySet>
+-  newResidencySet(uint64_t init_capacity, Error &error) {
+-    return Reference<ResidencySet>(MTLDevice_newResidencySet(handle, init_capacity, &error.handle));
++  newResidencySet(uint64_t init_capacity, Reference<Error> &error) {
++    return Reference<ResidencySet>(MTLDevice_newResidencySet(handle, init_capacity, error.releaseAndGetAddressOf()));
+   }
+ 
+   Reference<Heap>
+@@ -964,8 +991,8 @@ public:
+   }
+ 
+   Reference<BinaryArchive>
+-  newBinaryArchive(const char *url, Error &error) {
+-    return Reference<BinaryArchive>(MTLDevice_newBinaryArchive(handle, url, &error.handle));
++  newBinaryArchive(const char *url, Reference<Error> &error) {
++    return Reference<BinaryArchive>(MTLDevice_newBinaryArchive(handle, url, error.releaseAndGetAddressOf()));
+   }
+ 
+   bool
+diff --git a/src/winemetal/unix/winemetal_unix.c b/src/winemetal/unix/winemetal_unix.c
+index a64440c..78bdad0 100644
+--- a/src/winemetal/unix/winemetal_unix.c
++++ b/src/winemetal/unix/winemetal_unix.c
+@@ -340,7 +340,9 @@ _MTLDevice_newLibrary(void *obj) {
+   id<MTLDevice> device = (id<MTLDevice>)params->device;
+   NSError *err = NULL;
+   params->ret_library = (obj_handle_t)[device newLibraryWithData:(dispatch_data_t)params->data error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  /* Metal returns NSError out-parameters autoreleased, and the PE side releases every error it gets
++     (WMT::Reference<WMT::Error>): each ret_error carries a reference of its own. */
++  params->ret_error = (obj_handle_t)[err retain];
+   return STATUS_SUCCESS;
+ }
+ 
+@@ -389,7 +391,7 @@ _MTLDevice_newComputePipelineState(void *obj) {
+       info->fail_on_binary_archive_miss ? MTLPipelineOptionFailOnBinaryArchiveMiss : MTLPipelineOptionNone;
+   params->ret_pso =
+       (obj_handle_t)[device newComputePipelineStateWithDescriptor:descriptor options:options reflection:nil error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   if (!err && info->binary_archive_for_serialization) {
+     [(id<MTLBinaryArchive>)info->binary_archive_for_serialization addComputePipelineFunctionsWithDescriptor:descriptor
+                                                                                                       error:&err];
+@@ -574,7 +576,7 @@ _MTLDevice_newRenderPipelineState(void *obj) {
+                                                                                               options:options
+                                                                                            reflection:nil
+                                                                                                 error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   if (!err && info->binary_archive_for_serialization) {
+     [(id<MTLBinaryArchive>)info->binary_archive_for_serialization addRenderPipelineFunctionsWithDescriptor:descriptor
+                                                                                                      error:&err];
+@@ -645,7 +647,7 @@ _MTLDevice_newMeshRenderPipelineState(void *obj) {
+                                                                                                   options:options
+                                                                                                reflection:nil
+                                                                                                     error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+ #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 150000
+   if (@available(macOS 15, *)) {
+     if (!err && info->binary_archive_for_serialization) {
+@@ -1640,20 +1642,24 @@ _MetalLayer_setProps(void *obj) {
+ static NTSTATUS
+ _MetalLayer_getProps(void *obj) {
+   struct unixcall_generic_obj_ptr_noret *params = obj;
+-  CAMetalLayer *layer = (CAMetalLayer *)params->handle;
+-  struct WMTLayerProps *props = params->arg.ptr;
+-  props->device = (obj_handle_t)layer.device;
+-  props->opaque = layer.opaque;
+-  props->framebuffer_only = layer.framebufferOnly;
+-  props->contents_scale = layer.contentsScale;
+-  props->display_sync_enabled = layer.displaySyncEnabled;
+-  props->drawable_height = layer.drawableSize.height;
+-  props->drawable_width = layer.drawableSize.width;
+-  props->pixel_format = layer.pixelFormat;
+-  /* neutron: set by winemac.drv's WineMetalView (neutronUpdateNativeSize) */
+-  props->native_width = [[layer valueForKey:@"neutronNativeWidth"] doubleValue];
+-  props->native_height = [[layer valueForKey:@"neutronNativeHeight"] doubleValue];
+-  props->native_scale = [[layer valueForKey:@"neutronNativeScale"] doubleValue];
++  /* The getters below autorelease (the device, valueForKey:'s numbers) and the calling thread has no pool of its own.
++     props->device stays valid: the layer keeps its device. */
++  @autoreleasepool {
++    CAMetalLayer *layer = (CAMetalLayer *)params->handle;
++    struct WMTLayerProps *props = params->arg.ptr;
++    props->device = (obj_handle_t)layer.device;
++    props->opaque = layer.opaque;
++    props->framebuffer_only = layer.framebufferOnly;
++    props->contents_scale = layer.contentsScale;
++    props->display_sync_enabled = layer.displaySyncEnabled;
++    props->drawable_height = layer.drawableSize.height;
++    props->drawable_width = layer.drawableSize.width;
++    props->pixel_format = layer.pixelFormat;
++    /* neutron: set by winemac.drv's WineMetalView (neutronUpdateNativeSize) */
++    props->native_width = [[layer valueForKey:@"neutronNativeWidth"] doubleValue];
++    props->native_height = [[layer valueForKey:@"neutronNativeHeight"] doubleValue];
++    props->native_scale = [[layer valueForKey:@"neutronNativeScale"] doubleValue];
++  }
+   return STATUS_SUCCESS;
+ }
+ 
+@@ -2459,7 +2465,7 @@ _MTLLibrary_newFunctionWithConstants(void *obj) {
+     [values setConstantValue:constants[i].data.ptr type:(MTLDataType)constants[i].type atIndex:constants[i].index];
+ 
+   params->ret = (obj_handle_t)[library newFunctionWithName:name constantValues:values error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   [name release];
+   [values release];
+   return STATUS_SUCCESS;
+@@ -2499,32 +2505,35 @@ _WMTUpdateDisplaySetting(void *obj) {
+ static NTSTATUS
+ _WMTQueryDisplaySettingForLayer(void *obj) {
+   struct unixcall_query_display_setting_for_layer *params = obj;
+-  CAMetalLayer *layer = (CAMetalLayer *)params->layer;
+-  struct WMTHDRMetadata *hdr_metadata_out = params->hdr_metadata.ptr;
++  /* Called on every Present from a thread without an autorelease pool; the getters below autorelease the window, the
++     screen and the device description. */
++  @autoreleasepool {
++    CAMetalLayer *layer = (CAMetalLayer *)params->layer;
++    struct WMTHDRMetadata *hdr_metadata_out = params->hdr_metadata.ptr;
+ 
+-  params->version = 0;
+-  if (![layer.delegate isKindOfClass:NSView.class])
+-    return STATUS_SUCCESS;
++    params->version = 0;
++    if (![layer.delegate isKindOfClass:NSView.class])
++      return STATUS_SUCCESS;
+ 
+-  NSView *view = (NSView *)layer.delegate;
+-  if (!view.window)
+-    return STATUS_SUCCESS;
++    NSView *view = (NSView *)layer.delegate;
++    if (!view.window)
++      return STATUS_SUCCESS;
+ 
+-  if (!view.window.screen)
+-    return STATUS_SUCCESS;
+-
+-  NSScreen *screen = view.window.screen;
+-  CGDirectDisplayID id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
++    if (!view.window.screen)
++      return STATUS_SUCCESS;
+ 
+-  struct DisplaySetting *setting = &g_display_settings[id == CGMainDisplayID()];
+-  *hdr_metadata_out = setting->hdr_metadata;
+-  params->version = setting->version;
+-  params->colorspace = setting->colorspace;
+-  params->edr_value.maximum_edr_color_component_value =
+-      layer.wantsExtendedDynamicRangeContent ? screen.maximumExtendedDynamicRangeColorComponentValue : 1.0;
+-  params->edr_value.maximum_potential_edr_color_component_value =
+-      screen.maximumPotentialExtendedDynamicRangeColorComponentValue;
++    NSScreen *screen = view.window.screen;
++    CGDirectDisplayID id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
+ 
++    struct DisplaySetting *setting = &g_display_settings[id == CGMainDisplayID()];
++    *hdr_metadata_out = setting->hdr_metadata;
++    params->version = setting->version;
++    params->colorspace = setting->colorspace;
++    params->edr_value.maximum_edr_color_component_value =
++        layer.wantsExtendedDynamicRangeContent ? screen.maximumExtendedDynamicRangeColorComponentValue : 1.0;
++    params->edr_value.maximum_potential_edr_color_component_value =
++        screen.maximumPotentialExtendedDynamicRangeColorComponentValue;
++  }
+   return STATUS_SUCCESS;
+ }
+ 
+@@ -2687,7 +2696,7 @@ _MTLDevice_newBinaryArchive(void *obj) {
+   }
+   NSError *err = NULL;
+   params->ret_archive = (obj_handle_t)[(id<MTLDevice>)params->device newBinaryArchiveWithDescriptor:desc error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   [desc release];
+   if (url)
+     [url release];
+@@ -2703,7 +2712,7 @@ _MTLBinaryArchive_serialize(void *obj) {
+   NSURL *url = [[NSURL alloc] initFileURLWithPath:path_str];
+   NSError *err = NULL;
+   [(id<MTLBinaryArchive>)params->archive serializeToURL:url error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   [url release];
+   [path_str release];
+   return STATUS_SUCCESS;
+@@ -2951,7 +2960,7 @@ _MTLDevice_newTileRenderPipelineState(void *obj) {
+                                                                                                   options:options
+                                                                                                reflection:nil
+                                                                                                     error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+ #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 150000
+   if (@available(macOS 15, *)) {
+     if (!err && info->binary_archive_for_serialization) {
+@@ -2972,7 +2981,7 @@ _MTLDevice_newResidencySet(void *obj) {
+   MTLResidencySetDescriptor *descriptor = [[MTLResidencySetDescriptor alloc] init];
+   descriptor.initialCapacity = params->init_capacity;
+   params->ret_set = (obj_handle_t)[(id<MTLDevice>)params->device newResidencySetWithDescriptor:descriptor error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   [descriptor release];
+   return STATUS_SUCCESS;
+ }
+@@ -3151,7 +3160,7 @@ _MTLDevice_newLibraryWithSource(void *obj) {
+       [[NSString alloc] initWithBytes:params->source.ptr length:params->length encoding:NSASCIIStringEncoding];
+   NSError *err = NULL;
+   params->ret_library = (obj_handle_t)[device newLibraryWithSource:source options:nil error:&err];
+-  params->ret_error = (obj_handle_t)err;
++  params->ret_error = (obj_handle_t)[err retain]; /* owned, see _MTLDevice_newLibrary */
+   [source release];
+   return STATUS_SUCCESS;
+ }

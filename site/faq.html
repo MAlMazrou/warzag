@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<title>Warzag - Frequently Asked Questions</title>
+<meta name="description" content="Answers about Warzag: account safety, the Open Anyway step, Rosetta, Steam, updates, privacy, uninstalling and the source code.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Questions about Warzag">
+<meta property="og:description" content="Account safety, the Open Anyway step, Rosetta, Steam, updates, privacy, uninstalling and the source code.">
+<link rel="icon" href="icon.png" type="image/png">
+</head>
+<body>
+
+<header>
+<nav aria-label="Site">
+<p>[ <a href="index.html">Home</a> | <a href="first-launch.html">First Launch</a> | <a href="faq.html" aria-current="page">FAQ</a> | <a href="changes.html">Changes</a> | <a href="https://github.com/OWNER/REPO">Source Code</a> ]</p>
+</nav>
+</header>
+
+<hr>
+
+<main>
+<h1 id="top">Frequently Asked Questions</h1>
+
+<p>Short answers about Warzag, your account and your Mac.</p>
+
+<nav aria-label="Questions on this page">
+<ul>
+<li><a href="#account">Is it safe for my Warframe account?</a></li>
+<li><a href="#open-anyway">Why do I have to click Open Anyway?</a></li>
+<li><a href="#check">How do I check my download?</a></li>
+<li><a href="#installer">Can I install Warzag without the Open Anyway step?</a></li>
+<li><a href="#rosetta">Do I need Rosetta?</a></li>
+<li><a href="#steam">Do I need Steam?</a></li>
+<li><a href="#updates">How do updates work?</a></li>
+<li><a href="#privacy">Does Warzag collect any data?</a></li>
+<li><a href="#help">Something isn't working. Where can I get help?</a></li>
+<li><a href="#uninstall">How do I uninstall Warzag?</a></li>
+<li><a href="#source">Where is the source code?</a></li>
+</ul>
+</nav>
+
+<hr>
+
+<h2 id="account">Is it safe for my Warframe account?</h2>
+
+<p>Warzag runs the unchanged Windows version of Warframe. It never modifies the game's files, memory or network traffic, and only Digital Extremes' own launcher downloads and updates the game. You sign in through Steam's own window or Warframe's login screen, so Warzag never sees your passwords.</p>
+
+<p>Warframe also runs on the Steam Deck through Valve's Proton, which is built on Wine, like Warzag's engine. Warzag is an unofficial project, though, so it can't speak for Digital Extremes.</p>
+
+<hr>
+
+<h2 id="open-anyway">Why do I have to click Open Anyway?</h2>
+
+<p>Apple notarizes apps only for members of its paid developer program. Warzag is a free community project and isn't notarized, so macOS asks you to confirm it once. Notarization doesn't change how an app works.</p>
+
+<p>Warzag is still signed, with the project's own certificate, and you can <a href="#check">check your download</a> against its SHA-256 checksum. The <a href="first-launch.html">first-launch guide</a> shows every step.</p>
+
+<hr>
+
+<h2 id="check">How do I check my download?</h2>
+
+<p>Open Terminal and run:</p>
+
+<p><code translate="no">shasum -a 256 ~/Downloads/Warzag.dmg</code></p>
+
+<p>The long code it prints should match the one in <a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg.sha256">Warzag.dmg.sha256</a>, which comes with each release. If it doesn't, delete the file and download it again.</p>
+
+<hr>
+
+<h2 id="installer">Can I install Warzag without the Open Anyway step?</h2>
+
+<p>Yes, if you're comfortable with Terminal. This command downloads the same Warzag.dmg, checks its SHA-256 checksum and copies Warzag into your Applications folder:</p>
+
+<p><code translate="no">curl -fsSL https://github.com/OWNER/REPO/<wbr>releases/<wbr>latest/<wbr>download/<wbr>install.sh | sh</code></p>
+
+<p>Files downloaded in Terminal aren't marked as coming from the internet, so macOS doesn't ask. The installer doesn't need your password and doesn't open anything it downloads. You can read it first: it's part of the <a href="https://github.com/OWNER/REPO/blob/main/tools/release/install.sh">source code</a>.</p>
+
+<hr>
+
+<h2 id="rosetta">Do I need Rosetta?</h2>
+
+<p>No. Warzag's engine runs natively on Apple silicon. Warframe's Windows code is translated inside the engine by FEX, an open-source emulator, so Rosetta is never installed or used. Apple plans to limit Rosetta after macOS 27, so Warzag was built not to need it.</p>
+
+<hr>
+
+<h2 id="steam">Do I need Steam?</h2>
+
+<p>Steam is the simplest way: Warzag uses your normal Mac Steam app to sign you in, and installs Steam from Valve if it's missing.</p>
+
+<p>You can also play without Steam. Choose <b>Use a Warframe Account Instead</b> when Warzag offers to install Steam, or switch in Warzag's Settings, then sign in with your Warframe email and password. If Warframe offers to link your account to Steam, remember that Digital Extremes treats the link as permanent.</p>
+
+<hr>
+
+<h2 id="updates">How do updates work?</h2>
+
+<ul>
+<li><b>Warzag and its engine:</b> Warzag checks for new versions of both once a day. To check now, choose Warzag > Check for Updates, or click <b>Updates</b> on Home and then <b>Check for Updates</b>. When a new version is out, click <b>Update</b>: Warzag downloads it, checks its signature and installs it. Your game and settings stay where they are, and Warzag keeps the previous engine in case the new one has a problem.</li>
+<li><b>Warframe:</b> Digital Extremes' own launcher installs updates before each Play, just like on Windows. To update it sooner, click <b>Update Now</b> in the Updates window.</li>
+</ul>
+
+<p>What changed in each version of Warzag is on the <a href="changes.html">Changes</a> page.</p>
+
+<hr>
+
+<h2 id="privacy">Does Warzag collect any data?</h2>
+
+<p>No. Warzag has no analytics or ads, and you don't create an account with it. It downloads Steam from Valve, Warframe's installer from Digital Extremes and its engine from the Warzag project. Diagnostics leave your Mac only if you export them and send them yourself.</p>
+
+<p>This website has no cookies, trackers or analytics either.</p>
+
+<hr>
+
+<h2 id="help">Something isn't working. Where can I get help?</h2>
+
+<p>In Warzag, choose Help > Troubleshoot. It checks free space, Steam, the game files and Warzag's Windows setup, and can repair that setup. If that doesn't help, click <b>Export Diagnostics</b> and attach the report to a new issue on <a href="https://github.com/OWNER/REPO/issues">GitHub</a>.</p>
+
+<hr>
+
+<h2 id="uninstall">How do I uninstall Warzag?</h2>
+
+<ol>
+<li>Quit Warzag.</li>
+<li>Drag Warzag from Applications to the Trash.</li>
+<li>To free the space Warframe uses, also delete the folder <code translate="no">~/Library/Application Support/Warzag</code>. In Finder, choose Go > Go to Folder, paste the path and press Return. You can delete <code translate="no">~/Library/Caches/Warzag</code> and <code translate="no">~/Library/Logs/Warzag</code> the same way.</li>
+</ol>
+
+<p>Steam stays installed. Your Warframe account and progress are kept on Digital Extremes' servers, so removing Warzag doesn't affect them.</p>
+
+<hr>
+
+<h2 id="source">Where is the source code?</h2>
+
+<p>On GitHub: <a href="https://github.com/OWNER/REPO">github.com/OWNER/REPO</a>. Warzag is free software under the GPL-3.0 license, so you can read it, build it and change it. Its engine is built on Wine, FEX and DXMT, with a Steam bridge from Valve's Proton; each part keeps its own license.</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="#top">Back to top</a></p>
+<p><small>Warzag is free software under the <a href="https://github.com/OWNER/REPO/blob/main/LICENSE">GPL-3.0 license</a>. Its code is on <a href="https://github.com/OWNER/REPO">GitHub</a>.</small></p>
+<p><small>Warzag is an unofficial community project. It is not affiliated with or endorsed by Digital Extremes or Valve. Warframe is a trademark of Digital Extremes Ltd. Steam is a trademark of Valve Corporation. Mac and macOS are trademarks of Apple Inc.</small></p>
+</footer>
+</body>
+</html>

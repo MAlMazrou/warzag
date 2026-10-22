@@ -1,0 +1,26 @@
+Warzag Steam bridge (native arm64 engine): what each file is and which license covers it.
+
+In "Warzag.app" (Contents/lib/wine):
+  aarch64-windows/lsteamclient.dll, aarch64-unix/lsteamclient.so
+      Built from Valve's lsteamclient (https://github.com/ValveSoftware/Proton, branch proton_11.0, commit
+      5b89db940e0ebe3a137a6009a3589232fe084c09, whose lsteamclient/ tree is identical to the one of tag
+      proton-11.0-2e) as a Wine 11.19 builtin: an ARM64X DLL and an arm64 unix library. Patched with neutron's
+      macOS changes (https://github.com/lixsldotnet/neutron, patches/proton/0001 and 0002) and Warzag's NDEBUG
+      change (runtime/n/patches in Warzag's repository). Steamworks SDK license:
+      licenses/lsteamclient-Steamworks-SDK-LICENSE.txt. Valve's sources are fetched from Valve at build time; they
+      are not part of Warzag's repository and this component is not linked with any GPL code.
+
+Copied into each Wine prefix's C:\Program Files (x86)\Steam (from Contents/share/warzag/bridge):
+  steam.exe
+      Derived from steam_helper/steam.c in Valve's Proton, built as a native arm64 Windows program. BSD 3-Clause,
+      Copyright Valve Corporation and Warzag contributors: licenses/steam-shim-BSD-3-Clause.txt.
+  steamclient64.dll (shipped as steamclient64-forwarder.dll)
+      An export forwarder to lsteamclient.dll, written for Warzag. GPL-3.0: licenses/Warzag-GPL-3.0.txt.
+  wz-steamprobe.exe
+      Steam state probe, written for Warzag (x86-64; it runs under FEX like a game). GPL-3.0:
+      licenses/Warzag-GPL-3.0.txt.
+  steam.reg
+      Registry values imported into the prefix. GPL-3.0.
+
+None of these is Valve's Steam client. At run time the bridge loads the user's own Mac Steam
+(steamclient.dylib), which Warzag never redistributes or modifies.

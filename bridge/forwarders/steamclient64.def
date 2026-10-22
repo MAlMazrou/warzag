@@ -1,0 +1,69 @@
+; steamclient64.dll (x86-64) of Warzag's Steam bridge: every export forwards to Wine's builtin lsteamclient.dll.
+; steam_api loads it through HKCU\Software\Valve\Steam\ActiveProcess\SteamClientDll64.
+;
+; Names and ordinals are those of Proton's lsteamclient/lsteamclient.spec at the pinned commit, minus the
+; GameOverlayRenderer entry points and the private steamclient_init_registry. Names the spec marks "stub" forward to
+; winebuild stubs that fail if called, as under Proton. runtime/n/build.sh checks this list against the spec.
+;
+; Copyright (C) 2026 Warzag contributors. Licensed under the GNU General Public License v3.0 (see LICENSE).
+LIBRARY "steamclient64.dll"
+EXPORTS
+    Breakpad_SteamMiniDumpInit = lsteamclient.Breakpad_SteamMiniDumpInit @1
+    Breakpad_SteamSetAppID = lsteamclient.Breakpad_SteamSetAppID @2
+    Breakpad_SteamSetSteamID = lsteamclient.Breakpad_SteamSetSteamID @3
+    Breakpad_SteamWriteMiniDumpSetComment = lsteamclient.Breakpad_SteamWriteMiniDumpSetComment @4
+    Breakpad_SteamWriteMiniDumpUsingExceptionInfoWithBuildId = lsteamclient.Breakpad_SteamWriteMiniDumpUsingExceptionInfoWithBuildId @5
+    CreateInterface = lsteamclient.CreateInterface @6
+    Steam_BConnected = lsteamclient.Steam_BConnected @7
+    Steam_BGetCallback = lsteamclient.Steam_BGetCallback @8
+    Steam_BLoggedOn = lsteamclient.Steam_BLoggedOn @9
+    Steam_BReleaseSteamPipe = lsteamclient.Steam_BReleaseSteamPipe @10
+    Steam_ConnectToGlobalUser = lsteamclient.Steam_ConnectToGlobalUser @11
+    Steam_CreateGlobalUser = lsteamclient.Steam_CreateGlobalUser @12
+    Steam_CreateLocalUser = lsteamclient.Steam_CreateLocalUser @13
+    Steam_CreateSteamPipe = lsteamclient.Steam_CreateSteamPipe @14
+    Steam_FreeLastCallback = lsteamclient.Steam_FreeLastCallback @15
+    Steam_GSBLoggedOn = lsteamclient.Steam_GSBLoggedOn @16
+    Steam_GSBSecure = lsteamclient.Steam_GSBSecure @17
+    Steam_GSGetSteam2GetEncryptionKeyToSendToNewClient = lsteamclient.Steam_GSGetSteam2GetEncryptionKeyToSendToNewClient @18
+    Steam_GSGetSteamID = lsteamclient.Steam_GSGetSteamID @19
+    Steam_GSLogOff = lsteamclient.Steam_GSLogOff @20
+    Steam_GSLogOn = lsteamclient.Steam_GSLogOn @21
+    Steam_GSRemoveUserConnect = lsteamclient.Steam_GSRemoveUserConnect @22
+    Steam_GSSendSteam2UserConnect = lsteamclient.Steam_GSSendSteam2UserConnect @23
+    Steam_GSSendSteam3UserConnect = lsteamclient.Steam_GSSendSteam3UserConnect @24
+    Steam_GSSendUserDisconnect = lsteamclient.Steam_GSSendUserDisconnect @25
+    Steam_GSSendUserStatusResponse = lsteamclient.Steam_GSSendUserStatusResponse @26
+    Steam_GSSetServerType = lsteamclient.Steam_GSSetServerType @27
+    Steam_GSSetSpawnCount = lsteamclient.Steam_GSSetSpawnCount @28
+    Steam_GSUpdateStatus = lsteamclient.Steam_GSUpdateStatus @29
+    Steam_GetAPICallResult = lsteamclient.Steam_GetAPICallResult @30
+    Steam_GetGSHandle = lsteamclient.Steam_GetGSHandle @31
+    Steam_InitiateGameConnection = lsteamclient.Steam_InitiateGameConnection @32
+    Steam_LogOff = lsteamclient.Steam_LogOff @33
+    Steam_LogOn = lsteamclient.Steam_LogOn @34
+    Steam_ReleaseThreadLocalMemory = lsteamclient.Steam_ReleaseThreadLocalMemory @35
+    Steam_ReleaseUser = lsteamclient.Steam_ReleaseUser @36
+    Steam_SetLocalIPBinding = lsteamclient.Steam_SetLocalIPBinding @37
+    Steam_TerminateGameConnection = lsteamclient.Steam_TerminateGameConnection @38
+    hid_close = lsteamclient.hid_close @39
+    hid_enumerate = lsteamclient.hid_enumerate @40
+    hid_error = lsteamclient.hid_error @41
+    hid_exit = lsteamclient.hid_exit @42
+    hid_free_enumeration = lsteamclient.hid_free_enumeration @43
+    hid_get_feature_report = lsteamclient.hid_get_feature_report @44
+    hid_get_indexed_string = lsteamclient.hid_get_indexed_string @45
+    hid_get_manufacturer_string = lsteamclient.hid_get_manufacturer_string @46
+    hid_get_product_string = lsteamclient.hid_get_product_string @47
+    hid_get_serial_number_string = lsteamclient.hid_get_serial_number_string @48
+    hid_init = lsteamclient.hid_init @49
+    hid_open = lsteamclient.hid_open @50
+    hid_open_path = lsteamclient.hid_open_path @51
+    hid_read = lsteamclient.hid_read @52
+    hid_read_timeout = lsteamclient.hid_read_timeout @53
+    hid_send_feature_report = lsteamclient.hid_send_feature_report @54
+    hid_set_nonblocking = lsteamclient.hid_set_nonblocking @55
+    hid_write = lsteamclient.hid_write @56
+    hid_write_output_report = lsteamclient.hid_write_output_report @57
+    Steam_IsKnownInterface = lsteamclient.Steam_IsKnownInterface
+    Steam_NotifyMissingInterface = lsteamclient.Steam_NotifyMissingInterface

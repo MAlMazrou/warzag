@@ -1,0 +1,31 @@
+REGEDIT4
+
+; Static registry values of Warzag's Steam bridge, imported into every prefix by Warzag (and by
+; bridge/install-prefix.sh). steam.exe writes the HKCU values again whenever it starts a game, plus ActiveProcess
+; "pid" (its own process ID) and "language" (english when missing).
+
+[HKEY_CURRENT_USER\Software\Valve\Steam]
+"SteamPath"="C:\\Program Files (x86)\\Steam"
+"SteamExe"="C:\\Program Files (x86)\\Steam\\steam.exe"
+
+; What steam_api64 reads: the client DLL to load (the lsteamclient forwarder) and where Steam lives.
+[HKEY_CURRENT_USER\Software\Valve\Steam\ActiveProcess]
+"SteamClientDll64"="C:\\Program Files (x86)\\Steam\\steamclient64.dll"
+"SteamPath"="C:\\Program Files (x86)\\Steam"
+"Universe"="Public"
+
+; Where steam_api and some launchers look for steam.exe (both registry views).
+[HKEY_LOCAL_MACHINE\Software\Valve\Steam]
+"InstallPath"="C:\\Program Files (x86)\\Steam"
+
+[HKEY_LOCAL_MACHINE\Software\Wow6432Node\Valve\Steam]
+"InstallPath"="C:\\Program Files (x86)\\Steam"
+
+; steam:// links opened inside the prefix go to steam.exe, which hands them to Mac Steam (as Windows Steam
+; registers itself).
+[HKEY_CLASSES_ROOT\steam]
+@="URL:steam protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\steam\shell\open\command]
+@="\"C:\\Program Files (x86)\\Steam\\steam.exe\" -- \"%1\""

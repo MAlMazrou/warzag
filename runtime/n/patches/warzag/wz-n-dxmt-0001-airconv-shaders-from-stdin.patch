@@ -1,0 +1,35 @@
+Compile airconv's Metal helper shaders from stdin, so winemetal.so carries no build path.
+
+The Metal front end records the absolute path of a named input file in the AIR module (!air.source_file_name)
+whatever -ffile-prefix-map says, and winemetal.so embeds these modules. The shaders include only <metal_stdlib>.
+custom_target's feed needs meson 0.59; DXMT requires 1.3. Applies after neutron's dxmt series.
+
+License: LGPL-2.1-or-later (a change to DXMT).
+
+diff --git a/src/airconv/meson.build b/src/airconv/meson.build
+index b42f58b..9291823 100644
+--- a/src/airconv/meson.build
++++ b/src/airconv/meson.build
+@@ -69,10 +69,18 @@ airconv_shaders = [
+   'shaders/air_tessellation.metal',
+ ]
+ 
+-airconv_shaders_ir = metalir_generator.process(
+-  airconv_shaders,
+-  extra_args: ['-std=metal3.1', '--target=air64-apple-macos14.0'],
+-)
++# Fed on stdin: the Metal front end records a named input file's absolute path in the module
++# (!air.source_file_name) whatever -ffile-prefix-map says, and winemetal.so embeds these modules.
++airconv_shaders_ir = []
++foreach shader : airconv_shaders
++  airconv_shaders_ir += custom_target(
++    input   : shader,
++    output  : '@BASENAME@.air',
++    command : [ xcrun, '-sdk', 'macosx', 'metal', '-x', 'metal', '-o', '@OUTPUT@', '-c', '-',
++                '-std=metal3.1', '--target=air64-apple-macos14.0' ],
++    feed    : true,
++  )
++endforeach
+ airconv_shaders_header = hexdump_generator.process(airconv_shaders_ir)
+ 
+ airconv_src += airconv_shaders_header

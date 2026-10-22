@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "channel": "n",
+  "note": "Every third-party input of Warzag's engine (native arm64 Wine + ARM64EC, FEX, DXMT, lsteamclient), pinned like neutron's build.sh. runtime/n/fetch.sh downloads and verifies them into $WARZAG_CACHE/work/n/{downloads,repos}. Versions and commits are neutron's; sha256 values were computed on first download (TOFU) unless a GitHub release digest or a git commit id anchors them.",
+  "reference": {
+    "neutron": {
+      "repo": "https://github.com/lixsldotnet/neutron",
+      "commit": "0ac2574d46c186664f40b8efd0410e3d8145aa14",
+      "license": "LGPL-2.1-or-later",
+      "use": "Engine build recipe (build.sh pins) and the patch series vendored in runtime/n/patches (see its README.md). Its Steam integration (Steam.app change, steam_dev.cfg, CEF hook, Node, compatibilitytools.d) is not used by Warzag."
+    }
+  },
+  "archives": {
+    "wine": {
+      "version": "11.19",
+      "url": "https://dl.winehq.org/wine/source/11.x/wine-11.19.tar.xz",
+      "sha256": "4820066eda68e553d330239ffc628164a348d1c623e49d058e011c5a7cda95f1",
+      "size": 46796748,
+      "signature": {
+        "url": "https://dl.winehq.org/wine/source/11.x/wine-11.19.tar.xz.sign",
+        "sha256": "815eff219a072f792aea2b827beb38fa8fe34a398ba9d62e37512300e84d5de6",
+        "issuer_fingerprint": "DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D"
+      },
+      "license": "LGPL-2.1-or-later",
+      "pinned_by": "TOFU from dl.winehq.org over HTTPS; the detached signature names the WineHQ release key above (verified by fetch.sh --verify-signatures when gpg is installed)",
+      "use": "Wine: aarch64 unix side, ARM64EC + aarch64 (ARM64X) PE side"
+    },
+    "llvm-mingw": {
+      "version": "20260908",
+      "url": "https://github.com/mstorsjo/llvm-mingw/releases/download/20260908/llvm-mingw-20260908-ucrt-macos-universal.tar.xz",
+      "sha256": "d1dc5d1ecf3a3ced5ed5544c72f1acd0c8e84eb3024d520ecc6b143eec62a149",
+      "size": 124244100,
+      "license": "Apache-2.0 WITH LLVM-exception (toolchain); mingw-w64 runtime ZPL-2.1 and public domain",
+      "pinned_by": "GitHub release asset digest (gh api repos/mstorsjo/llvm-mingw/releases/tags/20260908)",
+      "use": "PE cross compilers: aarch64-, arm64ec- and x86_64-w64-mingw32 (Wine's PE side, FEX, DXMT, steam.exe); winnt.h patched and CRT startup objects rebuilt (patches/llvm-mingw)"
+    },
+    "sdl3": {
+      "version": "3.4.18",
+      "url": "https://github.com/libsdl-org/SDL/releases/download/release-3.4.18/SDL3-3.4.18.tar.gz",
+      "sha256": "9c75cf16330322c217dedd2e0609f1124f1b54b8633e763467b4684d0f4334a3",
+      "size": 15651004,
+      "license": "Zlib",
+      "pinned_by": "GitHub release asset digest",
+      "use": "Game controllers for winebus (behind sdl2-compat)"
+    },
+    "sdl2-compat": {
+      "version": "2.32.74",
+      "url": "https://github.com/libsdl-org/sdl2-compat/releases/download/release-2.32.74/sdl2-compat-2.32.74.tar.gz",
+      "sha256": "ec68abde77e2e459c8abc4f9587b8976b5d2a657b2bfda2fb3a079b0f8924588",
+      "size": 2826006,
+      "license": "Zlib",
+      "pinned_by": "GitHub release asset digest",
+      "use": "The SDL2 API winebus dlopens (libSDL2-2.0.0.dylib), on top of SDL3"
+    },
+    "wine-mono": {
+      "version": "11.3.0",
+      "optional": true,
+      "url": "https://github.com/wine-mono/wine-mono/releases/download/wine-mono-11.3.0/wine-mono-11.3.0-arm64.tar.xz",
+      "sha256": "227cbeef943c71d9bbcbd9d00ea026decbc4ecfb758346f13d2a34a7fd8ecfcf",
+      "size": 42809104,
+      "license": "MIT and the licenses of its parts",
+      "pinned_by": "GitHub release asset digest",
+      "use": "Pinned like neutron but not bundled by default (Warframe and DE's launcher need no .NET). runtime/n/build.sh --with-mono unpacks it into share/wine/mono."
+    }
+  },
+  "shared": {
+    "note": "Sources of the bundled TLS/font libraries, pinned in runtime/inputs.lock.json and built for arm64 here (neutron bundles Homebrew bottles instead, which target the newest macOS and pull in more libraries).",
+    "inputs": [
+      "crossover-sources",
+      "nettle"
+    ],
+    "from_crossover_sources": [
+      "gnutls/gmp (6.3.0)",
+      "gnutls/gnutls (3.8.3)",
+      "freetype (2.13.3)"
+    ]
+  },
+  "git": {
+    "proton": {
+      "repo": "https://github.com/ValveSoftware/Proton",
+      "ref": "proton_11.0",
+      "commit": "5b89db940e0ebe3a137a6009a3589232fe084c09",
+      "paths": [
+        "lsteamclient",
+        "steam_helper"
+      ],
+      "license": "lsteamclient: Steamworks SDK license (fetched at build time, never committed); steam_helper: BSD-3-Clause",
+      "note": "lsteamclient/ and steam_helper/ are identical to tag proton-11.0-2e (bc896217).",
+      "use": "lsteamclient built inside the Wine tree (dlls/lsteamclient) for ARM64EC/aarch64 PE + aarch64 unixlib"
+    },
+    "fex": {
+      "repo": "https://github.com/FEX-Emu/FEX",
+      "ref": "FEX-2610",
+      "commit": "14c92681f4d62cf84d901460e0358de09c8847a7",
+      "submodules_skipped": [
+        "External/fex-posixtest-bins",
+        "External/fex-gvisor-tests-bins",
+        "External/fex-gcc-target-tests-bins"
+      ],
+      "submodules": {
+        "External/Catch2": "b3fb4b9feafcd8d91c5cb510a4775143fdbef02f",
+        "External/Vulkan-Headers": "ee2ec5fd83dafce291024683b50dc89219333076",
+        "External/drm-headers": "3e49836995c1dcb3df709440ad2f270b569c6a5f",
+        "External/fmt": "c07e2aa4b130b4fd359a1c6455a5201b17af01fa",
+        "External/jemalloc_glibc": "8436195ad5e1bc347d9b39743af3d29abee59f06",
+        "External/range-v3": "ca1388fb9da8e69314dda222dc7b139ca84e092f",
+        "External/rpmalloc": "09142d726429416bfa7b459151515fe3ab7622dd",
+        "External/tracy": "650c98ece70da9e155e7ba1c2b3ee16004aae118",
+        "External/unordered_dense": "3234af2c03549bc85656bfd3a86993bf1cd8aef1",
+        "External/vixl": "585d860b12cdfc3a72f5fdad5e02e4d50a64c014",
+        "External/xxhash": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+        "External/zydis": "9bfadd6a55fc92dbd37fa3ba089bf8b36622df4f",
+        "Source/Common/cpp-optparse": "9f94388a339fcbb0bc95c17768eb786c85988f6e"
+      },
+      "license": "MIT",
+      "use": "x86-64 emulator: libarm64ecfex.dll (ARM64EC, the xtajit64 role) + libarm64ecfex.so (macOS unixlib)"
+    },
+    "dxmt": {
+      "repo": "https://github.com/3Shain/dxmt",
+      "ref": "main",
+      "commit": "e94c312f5c054263acf261cfa109edf13e757587",
+      "submodules": {
+        "external/nvapi": "d08488fcc82eef313b0464db37d2955709691e94",
+        "include/native/directx": "9df86f2341616ef1888ae59919feaa6d4fad693d"
+      },
+      "license": "LGPL-2.1-or-later (nvapi headers: MIT)",
+      "use": "D3D10/11/12 -> Metal: ARM64EC PE DLLs + aarch64 winemetal.so"
+    },
+    "llvm-project": {
+      "repo": "https://github.com/llvm/llvm-project",
+      "ref": "llvmorg-15.0.7",
+      "commit": "8dfdcc7b7bf66834a761bd8de445840ef68e4d1a",
+      "sparse": [
+        "llvm",
+        "cmake",
+        "third-party"
+      ],
+      "license": "Apache-2.0 WITH LLVM-exception",
+      "use": "LLVM 15 libraries (no targets) for DXMT's airconv shader converter, linked into winemetal.so"
+    },
+    "mingw-w64": {
+      "repo": "https://git.code.sf.net/p/mingw-w64/mingw-w64",
+      "mirror": "https://github.com/mingw-w64/mingw-w64",
+      "commit": "9f55f4a2d3b9783dab76d9808be3d6279b99ec2a",
+      "license": "ZPL-2.1 and public domain",
+      "use": "The CRT sources llvm-mingw 20260908 was built from; its startup objects are rebuilt with the TSD NtCurrentTeb"
+    }
+  }
+}

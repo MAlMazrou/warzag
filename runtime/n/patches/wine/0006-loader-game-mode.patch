@@ -1,0 +1,39 @@
+Loader inside an app bundle (Game Mode needs the games category) and a per-game app
+bundle that names ntdll through NEUTRON_NTDLL.
+--- a/loader/wine_info.plist.in
++++ b/loader/wine_info.plist.in
+@@ -26,5 +26,9 @@
+     <string>WineApplication</string>
+     <key>LSUIElement</key>
+     <string>1</string>
++    <key>LSApplicationCategoryType</key>
++    <string>public.app-category.games</string>
++    <key>LSSupportsGameMode</key>
++    <true/>
+ </dict>
+ </plist>
+--- a/loader/main.c
++++ b/loader/main.c
+@@ -153,6 +153,8 @@
+ 
+     if ((p = remove_tail( dir, "/loader" )))
+         path = build_path( p, "dlls/ntdll/ntdll.so" );
++    else if ((p = remove_tail( dir, "/Neutron.app/Contents/MacOS" )))
++        path = build_path( p, "ntdll.so" );  /* neutron: loader inside the app bundle */
+     else
+         path = build_path( dir, "ntdll.so" );
+ 
+@@ -173,6 +175,13 @@
+ 
+     init_reserved_areas();
+ 
++    /* neutron: a per-game app bundle (icon, name) lives outside the runtime and names ntdll */
++    if (getenv( "NEUTRON_NTDLL" ) && (handle = dlopen( getenv( "NEUTRON_NTDLL" ), RTLD_NOW )))
++    {
++        void (*init_func)(int, char **) = dlsym( handle, "__wine_main" );
++        if (init_func) init_func( argc, argv );
++    }
++
+     if ((handle = try_dlopen( get_self_exe() )) ||
+         (handle = try_dlopen( argv[0] )))
+     {

@@ -1,0 +1,34 @@
+Map a writable shared image section that does not fill whole host pages as a private copy.
+
+PE sections are 4K-aligned and Apple silicon has 16K pages, so such a section cannot be mapped shared, and Wine fails
+the image (c000007b). Digital Extremes' Launcher.exe and Warframe.x64.exe each have one. Only sharing the section
+between processes is lost.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/dlls/ntdll/unix/virtual.c
++++ b/dlls/ntdll/unix/virtual.c
+@@ -3235,8 +3235,21 @@
+             if (map_file_into_view( view, shared_fd, sec[i].VirtualAddress, map_size, pos,
+                                     VPROT_COMMITTED | VPROT_READ | VPROT_WRITE, FALSE ) != STATUS_SUCCESS)
+             {
+-                ERR_(module)( "Could not map %s shared section %.8s\n", debugstr_us(nt_name), sec[i].Name );
+-                goto done;
++                /* A shared section that starts or ends inside a host page cannot be mapped shared: map a private
++                 * copy instead, which other processes do not see. */
++                if (host_page_mask != page_mask &&
++                    ((sec[i].VirtualAddress & host_page_mask) || (map_size & host_page_mask)) &&
++                    map_file_into_view( view, shared_fd, sec[i].VirtualAddress, map_size, pos,
++                                        VPROT_COMMITTED | VPROT_READ | VPROT_WRITECOPY, FALSE ) == STATUS_SUCCESS)
++                {
++                    WARN_(module)( "%s shared section %.8s is not host-page aligned, mapped as a private copy\n",
++                                   debugstr_us(nt_name), sec[i].Name );
++                }
++                else
++                {
++                    ERR_(module)( "Could not map %s shared section %.8s\n", debugstr_us(nt_name), sec[i].Name );
++                    goto done;
++                }
+             }
+ 
+             /* check if the import directory falls inside this section */

@@ -1,0 +1,19 @@
+msync only with NEUTRON_MSYNC=1.
+
+neutron's wine 0015 describes msync as off unless NEUTRON_MSYNC=1, but the wineserver enables it unless the variable
+is "0". With msync on, the wineserver can block forever in msync_lock when a prefix's last process exits, so
+`wineserver -w` never returns.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/server/inproc_sync.c
++++ b/server/inproc_sync.c
+@@ -250,7 +250,7 @@
+ 
+     if (fd != -2) return fd;
+     fd = -1;
+-    if ((env = getenv( "NEUTRON_MSYNC" )) && !strcmp( env, "0" )) return -1;
++    if (!(env = getenv( "NEUTRON_MSYNC" )) || strcmp( env, "1" )) return -1;
+ 
+     snprintf( name, sizeof(name), "/wmsync-%d", (int)getpid() );
+     shm_unlink( name );

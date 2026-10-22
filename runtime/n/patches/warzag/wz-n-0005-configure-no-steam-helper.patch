@@ -1,0 +1,17 @@
+Do not build Proton's steam_helper.
+
+neutron's wine 0001 adds programs/steam_helper to configure.ac; Warzag ships its own steam.exe (bridge/steam-shim).
+lsteamclient is still built.
+
+License: LGPL-2.1-or-later (a change to Wine's configure.ac).
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -3671,7 +3671,6 @@
+ WINE_CONFIG_MAKEFILE(programs/sort)
+ WINE_CONFIG_MAKEFILE(programs/spoolsv)
+ WINE_CONFIG_MAKEFILE(programs/start)
+-WINE_CONFIG_MAKEFILE(programs/steam_helper)
+ WINE_CONFIG_MAKEFILE(programs/subst)
+ WINE_CONFIG_MAKEFILE(programs/svchost)
+ WINE_CONFIG_MAKEFILE(programs/systeminfo)

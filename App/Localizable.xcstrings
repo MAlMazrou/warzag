@@ -1,0 +1,4021 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "activity.checkingForEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking Warzag's release page for the engine…"
+          }
+        }
+      }
+    },
+    "activity.checkingInstaller": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking the installer…"
+          }
+        }
+      }
+    },
+    "activity.checkingLicense": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asking Steam whether Warframe is in your library…"
+          }
+        }
+      }
+    },
+    "activity.closingLauncher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing Digital Extremes' launcher…"
+          }
+        }
+      }
+    },
+    "activity.downloadingEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading the engine from Warzag's release page…"
+          }
+        }
+      }
+    },
+    "activity.downloadingGame": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher is downloading Warframe…"
+          }
+        }
+      }
+    },
+    "activity.downloadingInstaller": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading Warframe's installer from Digital Extremes…"
+          }
+        }
+      }
+    },
+    "activity.extractingInstaller": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unpacking Warframe's launcher…"
+          }
+        }
+      }
+    },
+    "activity.finishing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finishing up…"
+          }
+        }
+      }
+    },
+    "activity.installingEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing the engine…"
+          }
+        }
+      }
+    },
+    "activity.installingSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading Steam from Valve…"
+          }
+        }
+      }
+    },
+    "activity.maybeWaitingForEULA": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher may be waiting for you in its window…"
+          }
+        }
+      }
+    },
+    "activity.preparingGameFiles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files…"
+          }
+        }
+      }
+    },
+    "activity.registeringEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registering the development engine…"
+          }
+        }
+      }
+    },
+    "activity.restartExited": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher closed early; starting it again…"
+          }
+        }
+      }
+    },
+    "activity.restartStalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The download stalled; restarting Digital Extremes' launcher…"
+          }
+        }
+      }
+    },
+    "activity.restartedLauncher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting Digital Extremes' launcher again…"
+          }
+        }
+      }
+    },
+    "activity.settingUpWindows": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setting up Windows compatibility and the Steam connection…"
+          }
+        }
+      }
+    },
+    "activity.startingLauncher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting Digital Extremes' launcher…"
+          }
+        }
+      }
+    },
+    "activity.startingSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting Steam in the background…"
+          }
+        }
+      }
+    },
+    "activity.verifyingEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking the engine's signature…"
+          }
+        }
+      }
+    },
+    "activity.waitingForEULA": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for you in Digital Extremes' window…"
+          }
+        }
+      }
+    },
+    "app.demoBadge": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DEMO"
+          }
+        }
+      }
+    },
+    "app.demoBadgeAccessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo mode"
+          }
+        }
+      }
+    },
+    "app.demoBanner": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo mode: every step is simulated. Nothing is installed, and Steam, Wine and Digital Extremes' launcher are never started."
+          }
+        }
+      }
+    },
+    "app.disclaimer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unofficial; not affiliated with Digital Extremes or Valve."
+          }
+        }
+      }
+    },
+    "app.dismiss": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismiss"
+          }
+        }
+      }
+    },
+    "app.justNow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "just now"
+          }
+        }
+      }
+    },
+    "app.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag"
+          }
+        }
+      }
+    },
+    "app.troubleshoot": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Troubleshoot"
+          }
+        }
+      }
+    },
+    "app.troubleshootMenu": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Troubleshoot…"
+          }
+        }
+      }
+    },
+    "app.unknown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unknown"
+          }
+        }
+      }
+    },
+    "app.windowTitleDemo": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag — Demo"
+          }
+        }
+      }
+    },
+    "card.checkAgain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Again"
+          }
+        }
+      }
+    },
+    "card.eula.declinedBody": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' window closed before the license was accepted. Warframe can only be installed after you accept it there."
+          }
+        }
+      }
+    },
+    "card.eula.guessedBody": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher seems to be waiting. If its window shows the license, read it and accept it there. Warzag never accepts it for you."
+          }
+        }
+      }
+    },
+    "card.eula.guessedTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Digital Extremes' window"
+          }
+        }
+      }
+    },
+    "card.eula.liveBody": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accept Digital Extremes' EULA in the window that just opened. Warzag never accepts it for you."
+          }
+        }
+      }
+    },
+    "card.eula.primary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open It Again"
+          }
+        }
+      }
+    },
+    "card.eula.showWindow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the Window"
+          }
+        }
+      }
+    },
+    "card.eula.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accept Digital Extremes' license"
+          }
+        }
+      }
+    },
+    "card.installSteam.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag signs you in with your own Steam account. It downloads Steam from Valve and checks Valve's signature first."
+          }
+        }
+      }
+    },
+    "card.installSteam.primary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install Steam"
+          }
+        }
+      }
+    },
+    "card.installSteam.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install Steam"
+          }
+        }
+      }
+    },
+    "card.library.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe is free. On its Steam store page, click Play Game to add it to your library, then come back here."
+          }
+        }
+      }
+    },
+    "card.library.primary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open in Steam"
+          }
+        }
+      }
+    },
+    "card.library.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Warframe to your Steam library"
+          }
+        }
+      }
+    },
+    "card.move.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag keeps itself up to date from the Applications folder."
+          }
+        }
+      }
+    },
+    "card.move.primary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move to Applications"
+          }
+        }
+      }
+    },
+    "card.move.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move Warzag to Applications"
+          }
+        }
+      }
+    },
+    "card.notNow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not Now"
+          }
+        }
+      }
+    },
+    "card.openStorageSettings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Storage Settings"
+          }
+        }
+      }
+    },
+    "card.signIn.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Steam's window to sign in. Warzag carries on by itself as soon as you're signed in."
+          }
+        }
+      }
+    },
+    "card.signIn.primary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Steam"
+          }
+        }
+      }
+    },
+    "card.signIn.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to Steam"
+          }
+        }
+      }
+    },
+    "card.storage.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe needs about 80 GB on a drive that isn't case-sensitive. Warzag continues by itself once there's room."
+          }
+        }
+      }
+    },
+    "card.storage.free": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ free now."
+          }
+        }
+      }
+    },
+    "card.storage.primary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Again"
+          }
+        }
+      }
+    },
+    "card.storage.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make room for Warframe"
+          }
+        }
+      }
+    },
+    "card.useWarframeAccount": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a Warframe Account Instead"
+          }
+        }
+      }
+    },
+    "check.contentInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed"
+          }
+        }
+      }
+    },
+    "check.contentNeedsUpdate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed; an update is due"
+          }
+        }
+      }
+    },
+    "check.contentNotInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not installed"
+          }
+        }
+      }
+    },
+    "check.demo": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo: simulated"
+          }
+        }
+      }
+    },
+    "check.gameFiles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game files"
+          }
+        }
+      }
+    },
+    "check.steam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam"
+          }
+        }
+      }
+    },
+    "check.steamNotInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not installed"
+          }
+        }
+      }
+    },
+    "check.steamNotRunning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not running"
+          }
+        }
+      }
+    },
+    "check.steamSignedIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running and signed in"
+          }
+        }
+      }
+    },
+    "check.steamSignedOut": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running, not signed in"
+          }
+        }
+      }
+    },
+    "check.storage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free space"
+          }
+        }
+      }
+    },
+    "check.storageCaseSensitive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The drive is case-sensitive; Warframe needs one that isn't."
+          }
+        }
+      }
+    },
+    "check.storageFree": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ free"
+          }
+        }
+      }
+    },
+    "doctor.bridge": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam bridge files"
+          }
+        }
+      }
+    },
+    "doctor.dxmt": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graphics (DXMT)"
+          }
+        }
+      }
+    },
+    "doctor.folders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "User folders"
+          }
+        }
+      }
+    },
+    "doctor.identity": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PC identity"
+          }
+        }
+      }
+    },
+    "doctor.library": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game library (X:)"
+          }
+        }
+      }
+    },
+    "doctor.lsteamclient": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam bridge library"
+          }
+        }
+      }
+    },
+    "doctor.manifest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engine version of the Windows setup"
+          }
+        }
+      }
+    },
+    "doctor.prefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Windows compatibility"
+          }
+        }
+      }
+    },
+    "doctor.registry": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Windows settings"
+          }
+        }
+      }
+    },
+    "doctor.runtime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engine"
+          }
+        }
+      }
+    },
+    "doctor.steam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam settings"
+          }
+        }
+      }
+    },
+    "doctorPassed.folders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
+          }
+        }
+      }
+    },
+    "doctorPassed.identity": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unchanged"
+          }
+        }
+      }
+    },
+    "doctorPassed.inPlace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In place"
+          }
+        }
+      }
+    },
+    "doctorPassed.library": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linked to the game folder"
+          }
+        }
+      }
+    },
+    "doctorPassed.manifest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matches the installed engine"
+          }
+        }
+      }
+    },
+    "doctorPassed.prefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up"
+          }
+        }
+      }
+    },
+    "doctorPassed.runtime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed and verified"
+          }
+        }
+      }
+    },
+    "failure.bridge": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's connection to Steam isn't working. Repair may fix it."
+          }
+        }
+      }
+    },
+    "failure.directX11": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The launcher couldn't be set to DirectX 11."
+          }
+        }
+      }
+    },
+    "failure.download": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The download didn't finish."
+          }
+        }
+      }
+    },
+    "failure.downloadStuck": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The download is stuck. Warzag restarted Digital Extremes' launcher, but it made no progress."
+          }
+        }
+      }
+    },
+    "failure.engineDamaged": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine download was damaged, so Warzag downloads it again."
+          }
+        }
+      }
+    },
+    "failure.engineDownload": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine couldn't be downloaded from Warzag's release page."
+          }
+        }
+      }
+    },
+    "failure.engineFeed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's release page doesn't offer the engine right now."
+          }
+        }
+      }
+    },
+    "failure.engineInstall": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine couldn't be installed."
+          }
+        }
+      }
+    },
+    "failure.engineMissing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine is missing or damaged."
+          }
+        }
+      }
+    },
+    "failure.engineNeedsMacOS": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine needs macOS %@ or later."
+          }
+        }
+      }
+    },
+    "failure.engineNeedsNewerApp": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine needs a newer Warzag. Download the latest Warzag from its website."
+          }
+        }
+      }
+    },
+    "failure.enginePaused": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This engine version is paused while the Warzag team fixes a problem. Try again later."
+          }
+        }
+      }
+    },
+    "failure.engineRejected": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The engine download didn't pass Warzag's security checks, so it wasn't installed."
+          }
+        }
+      }
+    },
+    "failure.extract": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe's installer couldn't be unpacked."
+          }
+        }
+      }
+    },
+    "failure.installerCheck": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The downloaded installer didn't pass Warzag's checks."
+          }
+        }
+      }
+    },
+    "failure.installerDownload": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe's installer couldn't be downloaded."
+          }
+        }
+      }
+    },
+    "failure.launcher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher didn't start."
+          }
+        }
+      }
+    },
+    "failure.launcherStuck": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher kept stopping before its license appeared."
+          }
+        }
+      }
+    },
+    "failure.move": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag couldn't move itself to the Applications folder."
+          }
+        }
+      }
+    },
+    "failure.needsAppleSilicon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag needs a Mac with Apple silicon."
+          }
+        }
+      }
+    },
+    "failure.needsMacOS": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag needs macOS %@ or later."
+          }
+        }
+      }
+    },
+    "failure.needsRepair": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's Windows setup is incomplete. Repair should fix it."
+          }
+        }
+      }
+    },
+    "failure.noEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This build of Warzag can't download the engine. Download Warzag from its website."
+          }
+        }
+      }
+    },
+    "failure.notAnEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The development engine you chose isn't a Warzag engine."
+          }
+        }
+      }
+    },
+    "failure.prefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Windows compatibility couldn't be set up."
+          }
+        }
+      }
+    },
+    "failure.probe": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam didn't answer whether Warframe is in your library."
+          }
+        }
+      }
+    },
+    "failure.profile": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graphics settings couldn't be prepared."
+          }
+        }
+      }
+    },
+    "failure.registerEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The development engine couldn't be registered. Rebuild it and try again."
+          }
+        }
+      }
+    },
+    "failure.steamInstall": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam couldn't be installed."
+          }
+        }
+      }
+    },
+    "failure.steamNotRunning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam isn't running."
+          }
+        }
+      }
+    },
+    "failure.steamOffline": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam isn't connected to its servers. If Steam is in offline mode, go online in Steam, then try again."
+          }
+        }
+      }
+    },
+    "failure.steamStart": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam didn't start."
+          }
+        }
+      }
+    },
+    "format.bytesOf": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ of %2$@"
+          }
+        }
+      }
+    },
+    "format.bytesOfAbout": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ of about %2$@"
+          }
+        }
+      }
+    },
+    "format.perSecond": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/s"
+          }
+        }
+      }
+    },
+    "format.timeLeft": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "about %@ left"
+          }
+        }
+      }
+    },
+    "graphics.balanced": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balanced"
+          }
+        }
+      }
+    },
+    "graphics.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · up to %2$@ fps"
+          }
+        }
+      }
+    },
+    "graphics.footnote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag caps the frame rate. Set the upscaling once in Warframe, in Options › Display › Upscaling: FSR 3 with the preset's quality, or off for Quality. DLSS isn't available under Warzag. On a MacBook Air on battery, in Low Power Mode or when the Mac is hot, the cap drops to 30 fps."
+          }
+        }
+      }
+    },
+    "graphics.performance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Performance"
+          }
+        }
+      }
+    },
+    "graphics.quality": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quality"
+          }
+        }
+      }
+    },
+    "graphics.recommended": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recommended"
+          }
+        }
+      }
+    },
+    "home.checking": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking Warframe's files…"
+          }
+        }
+      }
+    },
+    "home.notInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe's files are missing. Try Repair."
+          }
+        }
+      }
+    },
+    "home.play": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play"
+          }
+        }
+      }
+    },
+    "home.playAccessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Warframe"
+          }
+        }
+      }
+    },
+    "home.playEULA": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes updated their license. Accept it in their window to finish the update."
+          }
+        }
+      }
+    },
+    "home.playEULAGuessed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher seems to be waiting. If its window shows their license, accept it there to finish the update."
+          }
+        }
+      }
+    },
+    "home.playLaunching": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening Warframe…"
+          }
+        }
+      }
+    },
+    "home.playPreparing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting…"
+          }
+        }
+      }
+    },
+    "home.playUpdating": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updating Warframe…"
+          }
+        }
+      }
+    },
+    "home.playWaitingForSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to Steam to continue…"
+          }
+        }
+      }
+    },
+    "home.prefixNeedsSetUp": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Windows compatibility isn't set up for the new engine yet. Press Repair."
+          }
+        }
+      }
+    },
+    "home.repair": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repair"
+          }
+        }
+      }
+    },
+    "home.repairDone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's Windows setup was repaired."
+          }
+        }
+      }
+    },
+    "home.repairFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repair didn't finish. Export Diagnostics and report the problem."
+          }
+        }
+      }
+    },
+    "home.repairing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repairing…"
+          }
+        }
+      }
+    },
+    "home.sessionProblems": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe reported a problem:"
+          }
+        }
+      }
+    },
+    "home.showLogs": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Logs"
+          }
+        }
+      }
+    },
+    "home.updated": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated %@"
+          }
+        }
+      }
+    },
+    "home.updates": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates"
+          }
+        }
+      }
+    },
+    "home.updatesAvailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates: an update is available"
+          }
+        }
+      }
+    },
+    "home.updatingEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updating the engine…"
+          }
+        }
+      }
+    },
+    "home.updatingWarzag": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updating Warzag…"
+          }
+        }
+      }
+    },
+    "home.warframeVersion": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe %@"
+          }
+        }
+      }
+    },
+    "notice.motionBlurOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Motion blur is on. Under Warzag it can smear; turn it off in Warframe: Options › Display."
+          }
+        }
+      }
+    },
+    "playFailure.busy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe or Digital Extremes' launcher is still running. Close it and try again."
+          }
+        }
+      }
+    },
+    "playFailure.eula": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The update needs Digital Extremes' license to be accepted in their window."
+          }
+        }
+      }
+    },
+    "playFailure.notInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe's files are missing."
+          }
+        }
+      }
+    },
+    "playFailure.other": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe couldn't start."
+          }
+        }
+      }
+    },
+    "playFailure.repair": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's Windows setup needs a repair before Warframe can start."
+          }
+        }
+      }
+    },
+    "playFailure.steam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam isn't signed in. Sign in to Steam, or choose a Warframe account in Settings."
+          }
+        }
+      }
+    },
+    "playFailure.stuck": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The update didn't finish. Check the internet connection and try again."
+          }
+        }
+      }
+    },
+    "playing.elapsed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playing for %@"
+          }
+        }
+      }
+    },
+    "playing.finishing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe closed. Cleaning up…"
+          }
+        }
+      }
+    },
+    "playing.forceQuit": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Force Quit"
+          }
+        }
+      }
+    },
+    "playing.forceQuitHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe isn't responding to Quit. Force Quit ends it and everything Warzag started for it."
+          }
+        }
+      }
+    },
+    "playing.quit": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit Warframe"
+          }
+        }
+      }
+    },
+    "playing.quitting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asking Warframe to quit…"
+          }
+        }
+      }
+    },
+    "playing.returnToGame": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Return to Game"
+          }
+        }
+      }
+    },
+    "playing.starting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe is starting…"
+          }
+        }
+      }
+    },
+    "playing.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe is running"
+          }
+        }
+      }
+    },
+    "power.battery": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running on battery: Warframe runs best plugged in."
+          }
+        }
+      }
+    },
+    "power.batteryFanless": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On battery, Warzag holds Warframe to %@ fps to keep this fanless Mac cool. Plug in for 60 fps."
+          }
+        }
+      }
+    },
+    "power.batterySettings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery Settings…"
+          }
+        }
+      }
+    },
+    "power.lowBattery": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The battery is at %@. When it's nearly empty, macOS slows the Mac down and Warframe stutters. Charge it, or plug in your Mac's own charger."
+          }
+        }
+      }
+    },
+    "power.lowPowerMode": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low Power Mode is on: Warframe is held to %@ fps and may stutter. Turn it off for the best experience."
+          }
+        }
+      }
+    },
+    "power.thermal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Mac is hot: Warframe is held to %@ fps until it cools down."
+          }
+        }
+      }
+    },
+    "power.weakCharger": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your charger supplies only %1$@. Warframe needs about 20–30 W, so the battery drains while you play and the Mac slows down when it gets low. Use your Mac's own charger (%2$@ or more)."
+          }
+        }
+      }
+    },
+    "settings.advanced": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advanced"
+          }
+        }
+      }
+    },
+    "settings.advancedButton": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advanced…"
+          }
+        }
+      }
+    },
+    "settings.checkForUpdates": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for updates automatically"
+          }
+        }
+      }
+    },
+    "settings.checkForUpdatesNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Once a day, Warzag asks its release page whether a newer Warzag or engine is out. It never downloads or installs anything by itself, and never checks while you play."
+          }
+        }
+      }
+    },
+    "settings.choose": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose…"
+          }
+        }
+      }
+    },
+    "settings.chooseEngineMessage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a Warzag engine (a Warzag.app game host built with runtime/n/make-host.sh)."
+          }
+        }
+      }
+    },
+    "settings.clear": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
+          }
+        }
+      }
+    },
+    "settings.developmentEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Development engine"
+          }
+        }
+      }
+    },
+    "settings.developmentEngineFromEnvironment": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set by WARZAG_DEV_RUNTIME for this run."
+          }
+        }
+      }
+    },
+    "settings.developmentEngineNone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
+          }
+        }
+      }
+    },
+    "settings.graphics": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graphics"
+          }
+        }
+      }
+    },
+    "settings.hideWhilePlaying": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide Warzag while playing"
+          }
+        }
+      }
+    },
+    "settings.hideWhilePlayingNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About a minute after Warframe's window appears, Warzag leaves the Dock, so only the game shows there. It comes back when the game ends. To see it sooner, open Warzag again."
+          }
+        }
+      }
+    },
+    "settings.performanceHUD": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Apple's performance HUD in the game"
+          }
+        }
+      }
+    },
+    "settings.playing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While Playing"
+          }
+        }
+      }
+    },
+    "settings.steam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam"
+          }
+        }
+      }
+    },
+    "settings.updates": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates"
+          }
+        }
+      }
+    },
+    "setup.chooseEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Engine…"
+          }
+        }
+      }
+    },
+    "setup.engineDone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Native Apple silicon engine"
+          }
+        }
+      }
+    },
+    "setup.progress": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ done"
+          }
+        }
+      }
+    },
+    "setup.retryingSoon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Didn't work. Trying again shortly…"
+          }
+        }
+      }
+    },
+    "setup.showSteps": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the steps of %@"
+          }
+        }
+      }
+    },
+    "setup.steamSkipped": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signing in with a Warframe account instead"
+          }
+        }
+      }
+    },
+    "setup.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything runs by itself. A card appears here when something needs you."
+          }
+        }
+      }
+    },
+    "setup.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setting up Warframe"
+          }
+        }
+      }
+    },
+    "setup.tryAgain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try Again"
+          }
+        }
+      }
+    },
+    "setup.unsupportedTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac can't run Warzag"
+          }
+        }
+      }
+    },
+    "setup.waitsForChecks": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waits for the checks on this Mac"
+          }
+        }
+      }
+    },
+    "setup.waitsForEngine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waits for the engine"
+          }
+        }
+      }
+    },
+    "signal.closing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe is closing…"
+          }
+        }
+      }
+    },
+    "signal.downloadCorrupted": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe found damaged downloaded files."
+          }
+        }
+      }
+    },
+    "signal.loggedIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed in to Warframe"
+          }
+        }
+      }
+    },
+    "signal.metalViewFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The graphics engine is damaged. Try Repair."
+          }
+        }
+      }
+    },
+    "signal.mustRunFromLauncher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Warframe build only starts from Digital Extremes' launcher."
+          }
+        }
+      }
+    },
+    "signal.steamActive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connected to Steam"
+          }
+        }
+      }
+    },
+    "signal.steamInitFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe couldn't reach Steam (license or sign-in)."
+          }
+        }
+      }
+    },
+    "signal.steamLogin": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signing in with Steam…"
+          }
+        }
+      }
+    },
+    "signal.steamNotRunning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe says Steam isn't running."
+          }
+        }
+      }
+    },
+    "signal.steamOutOfDate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe says Steam is out of date."
+          }
+        }
+      }
+    },
+    "status.accessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "status.active": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In progress"
+          }
+        }
+      }
+    },
+    "status.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "status.failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Didn't work"
+          }
+        }
+      }
+    },
+    "status.needsYou": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs you"
+          }
+        }
+      }
+    },
+    "status.offline": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for the internet"
+          }
+        }
+      }
+    },
+    "status.pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting"
+          }
+        }
+      }
+    },
+    "status.skipped": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not needed"
+          }
+        }
+      }
+    },
+    "steam.card.notInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam isn't installed"
+          }
+        }
+      }
+    },
+    "steam.card.notInstalledNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install it in Setup, or turn off Sign in with Steam to use your Warframe account."
+          }
+        }
+      }
+    },
+    "steam.card.off": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam is off"
+          }
+        }
+      }
+    },
+    "steam.card.signInWindowNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in in Steam's window. Tick Remember me to be signed in automatically next time."
+          }
+        }
+      }
+    },
+    "steam.card.signedIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed in to Steam"
+          }
+        }
+      }
+    },
+    "steam.card.signedOut": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not signed in"
+          }
+        }
+      }
+    },
+    "steam.card.signedOutElsewhere": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam signed you out"
+          }
+        }
+      }
+    },
+    "steam.card.signedOutElsewhereNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account is in use on another device."
+          }
+        }
+      }
+    },
+    "steam.card.signedOutNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log in to play with Steam."
+          }
+        }
+      }
+    },
+    "steam.card.signingIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signing in to Steam…"
+          }
+        }
+      }
+    },
+    "steam.card.starting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting Steam…"
+          }
+        }
+      }
+    },
+    "steam.keepOutOfSight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Steam out of sight"
+          }
+        }
+      }
+    },
+    "steam.keepOutOfSightNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag hides Steam's windows after you sign in and while Warframe starts. Steam's icon stays in the Dock while it runs."
+          }
+        }
+      }
+    },
+    "steam.logIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log In"
+          }
+        }
+      }
+    },
+    "steam.logOut": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log Out"
+          }
+        }
+      }
+    },
+    "steam.quitWarframeFirst": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit Warframe first"
+          }
+        }
+      }
+    },
+    "steam.signInAgain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign In Again"
+          }
+        }
+      }
+    },
+    "steam.signInWithSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in with Steam"
+          }
+        }
+      }
+    },
+    "steam.signInWithSteamNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off: Warframe asks for your Warframe account, and Warzag never starts Steam."
+          }
+        }
+      }
+    },
+    "step.acceptEULA": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accept Digital Extremes' license"
+          }
+        }
+      }
+    },
+    "step.activateRuntime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install the engine"
+          }
+        }
+      }
+    },
+    "step.applyProfile": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tune graphics for this Mac"
+          }
+        }
+      }
+    },
+    "step.checkLicense": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your Steam library"
+          }
+        }
+      }
+    },
+    "step.checkLocation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check where Warzag runs from"
+          }
+        }
+      }
+    },
+    "step.checkNetwork": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check the internet connection"
+          }
+        }
+      }
+    },
+    "step.checkPlatform": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check this Mac"
+          }
+        }
+      }
+    },
+    "step.checkStorage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check free space"
+          }
+        }
+      }
+    },
+    "step.createPrefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepare Windows compatibility"
+          }
+        }
+      }
+    },
+    "step.downloadContent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download Warframe"
+          }
+        }
+      }
+    },
+    "step.downloadInstaller": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download Warframe's installer"
+          }
+        }
+      }
+    },
+    "step.downloadRuntime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get the engine"
+          }
+        }
+      }
+    },
+    "step.extractGame": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unpack Warframe"
+          }
+        }
+      }
+    },
+    "step.fetchManifest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find the engine"
+          }
+        }
+      }
+    },
+    "step.installSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install Steam"
+          }
+        }
+      }
+    },
+    "step.pinDirectX11": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up DirectX 11"
+          }
+        }
+      }
+    },
+    "step.startSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Steam"
+          }
+        }
+      }
+    },
+    "step.verifyRuntime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verify the engine"
+          }
+        }
+      }
+    },
+    "step.waitForSignIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to Steam"
+          }
+        }
+      }
+    },
+    "stepActive.acceptEULA": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening Digital Extremes' license…"
+          }
+        }
+      }
+    },
+    "stepActive.activateRuntime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing the engine…"
+          }
+        }
+      }
+    },
+    "stepActive.applyProfile": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuning graphics for this Mac…"
+          }
+        }
+      }
+    },
+    "stepActive.checkLicense": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking your Steam library…"
+          }
+        }
+      }
+    },
+    "stepActive.checkLocation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking where Warzag runs from…"
+          }
+        }
+      }
+    },
+    "stepActive.checkNetwork": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking the internet connection…"
+          }
+        }
+      }
+    },
+    "stepActive.checkPlatform": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking this Mac…"
+          }
+        }
+      }
+    },
+    "stepActive.checkStorage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking free space…"
+          }
+        }
+      }
+    },
+    "stepActive.createPrefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing Windows compatibility…"
+          }
+        }
+      }
+    },
+    "stepActive.downloadContent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading Warframe…"
+          }
+        }
+      }
+    },
+    "stepActive.downloadInstaller": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading Warframe's installer…"
+          }
+        }
+      }
+    },
+    "stepActive.downloadRuntime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getting the engine…"
+          }
+        }
+      }
+    },
+    "stepActive.extractGame": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unpacking Warframe…"
+          }
+        }
+      }
+    },
+    "stepActive.fetchManifest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking for the engine…"
+          }
+        }
+      }
+    },
+    "stepActive.installSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking for Steam…"
+          }
+        }
+      }
+    },
+    "stepActive.pinDirectX11": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setting up DirectX 11…"
+          }
+        }
+      }
+    },
+    "stepActive.startSteam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting Steam…"
+          }
+        }
+      }
+    },
+    "stepActive.verifyRuntime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verifying the engine…"
+          }
+        }
+      }
+    },
+    "stepActive.waitForSignIn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for Steam sign-in…"
+          }
+        }
+      }
+    },
+    "track.engine": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engine"
+          }
+        }
+      }
+    },
+    "track.game": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe"
+          }
+        }
+      }
+    },
+    "track.preflight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac"
+          }
+        }
+      }
+    },
+    "track.steam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam"
+          }
+        }
+      }
+    },
+    "troubleshoot.checking": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking…"
+          }
+        }
+      }
+    },
+    "troubleshoot.export": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export Diagnostics…"
+          }
+        }
+      }
+    },
+    "troubleshoot.exportFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diagnostics couldn't be saved."
+          }
+        }
+      }
+    },
+    "troubleshoot.exported": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diagnostics saved."
+          }
+        }
+      }
+    },
+    "troubleshoot.failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed"
+          }
+        }
+      }
+    },
+    "troubleshoot.intro": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag checks its engine, Steam and the game files. Repair sets up Warzag's Windows side again without touching your game files or Warframe settings."
+          }
+        }
+      }
+    },
+    "troubleshoot.lastChecked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checked %@"
+          }
+        }
+      }
+    },
+    "troubleshoot.openLogs": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Logs Folder"
+          }
+        }
+      }
+    },
+    "troubleshoot.passed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passed"
+          }
+        }
+      }
+    },
+    "troubleshoot.privacy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diagnostics leave out your email, Steam ID, IP addresses and user name."
+          }
+        }
+      }
+    },
+    "troubleshoot.repair": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repair Windows Setup"
+          }
+        }
+      }
+    },
+    "troubleshoot.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Troubleshoot"
+          }
+        }
+      }
+    },
+    "updates.available": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %1$@ is available (%2$@)"
+          }
+        }
+      }
+    },
+    "updates.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "updates.cancelAccessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel the Warframe update"
+          }
+        }
+      }
+    },
+    "updates.check": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates"
+          }
+        }
+      }
+    },
+    "updates.downloadingWarzag": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading Warzag %@…"
+          }
+        }
+      }
+    },
+    "updates.engineCheckFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag couldn't check for a new engine."
+          }
+        }
+      }
+    },
+    "updates.engineDevelopment": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A development engine is in use. Rebuild it to update it."
+          }
+        }
+      }
+    },
+    "updates.engineNeedsNewerWarzag": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This engine needs a newer Warzag. Update Warzag first."
+          }
+        }
+      }
+    },
+    "updates.engineNoFeed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This build gets no engine updates."
+          }
+        }
+      }
+    },
+    "updates.engineNotInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not installed"
+          }
+        }
+      }
+    },
+    "updates.enginePrefixFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The new engine is installed, but Windows compatibility couldn't be set up for it."
+          }
+        }
+      }
+    },
+    "updates.engineSetup": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup installs the engine."
+          }
+        }
+      }
+    },
+    "updates.gameRunning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe or Digital Extremes' launcher is running. Updates wait until it closes."
+          }
+        }
+      }
+    },
+    "updates.installingWarzag": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing. Warzag quits and opens again by itself."
+          }
+        }
+      }
+    },
+    "updates.intro": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag asks its release page for a newer Warzag and engine. Warframe updates through Digital Extremes' launcher, as it does before every Play."
+          }
+        }
+      }
+    },
+    "updates.menu": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates…"
+          }
+        }
+      }
+    },
+    "updates.notChecked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not checked yet"
+          }
+        }
+      }
+    },
+    "updates.notConfigured": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This build has no update feed."
+          }
+        }
+      }
+    },
+    "updates.releaseNotes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release Notes"
+          }
+        }
+      }
+    },
+    "updates.showInFinder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in Finder"
+          }
+        }
+      }
+    },
+    "updates.showWarzagCopyAccessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the new Warzag in Finder"
+          }
+        }
+      }
+    },
+    "updates.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates"
+          }
+        }
+      }
+    },
+    "updates.unreachable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's release page couldn't be reached. Check the internet connection and try again."
+          }
+        }
+      }
+    },
+    "updates.upToDate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to date"
+          }
+        }
+      }
+    },
+    "updates.update": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update"
+          }
+        }
+      }
+    },
+    "updates.updateAccessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update %@"
+          }
+        }
+      }
+    },
+    "updates.updateNow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update Now"
+          }
+        }
+      }
+    },
+    "updates.version": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@"
+          }
+        }
+      }
+    },
+    "updates.versionBuild": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "updates.waitPlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates wait until Warframe has closed."
+          }
+        }
+      }
+    },
+    "updates.waitRepair": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates wait until Repair has finished."
+          }
+        }
+      }
+    },
+    "updates.waitSetup": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates wait until setup has finished."
+          }
+        }
+      }
+    },
+    "updates.waitUpdate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates run one at a time."
+          }
+        }
+      }
+    },
+    "updates.warframeBeforePlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes' launcher also updates it before every Play."
+          }
+        }
+      }
+    },
+    "updates.warframeDue": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital Extremes may have released an update since."
+          }
+        }
+      }
+    },
+    "updates.warframeFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe couldn't be updated."
+          }
+        }
+      }
+    },
+    "updates.warframeNeedsRepair": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag's Windows setup needs a repair before Warframe can update."
+          }
+        }
+      }
+    },
+    "updates.warframeSetup": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup downloads Warframe."
+          }
+        }
+      }
+    },
+    "updates.warframeUpToDate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe is up to date."
+          }
+        }
+      }
+    },
+    "updates.warframeUpdated": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warframe was updated."
+          }
+        }
+      }
+    },
+    "updates.warframeWaitsForPrefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waits until Windows compatibility is set up for the new engine."
+          }
+        }
+      }
+    },
+    "updates.warzagCannotReplace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag can't replace itself where it is. Download the new version from Warzag's website."
+          }
+        }
+      }
+    },
+    "updates.warzagCannotReplaceCopy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag can't replace itself here. Drag the new Warzag from Finder into Applications."
+          }
+        }
+      }
+    },
+    "updates.warzagFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag couldn't be updated."
+          }
+        }
+      }
+    },
+    "updates.warzagNeedsMacOS": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This update needs macOS %@ or later."
+          }
+        }
+      }
+    },
+    "updates.warzagRejected": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The update didn't pass Warzag's security checks, so nothing was installed."
+          }
+        }
+      }
+    },
+    "upscaling.fsr3Balanced": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FSR 3 Balanced"
+          }
+        }
+      }
+    },
+    "upscaling.fsr3Performance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FSR 3 Performance"
+          }
+        }
+      }
+    },
+    "upscaling.off": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No upscaling"
+          }
+        }
+      }
+    },
+    "welcome.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warzag sets up everything Warframe needs: its Windows engine, your Steam sign-in and the game itself. It only asks you when something needs you."
+          }
+        }
+      }
+    },
+    "welcome.content": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloads Warframe only through Digital Extremes' own launcher."
+          }
+        }
+      }
+    },
+    "welcome.getStarted": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get Started"
+          }
+        }
+      }
+    },
+    "welcome.steam": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signs in with your own Mac Steam. Warzag never sees your password."
+          }
+        }
+      }
+    },
+    "welcome.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Warframe on your Mac"
+          }
+        }
+      }
+    },
+    "welcome.tuned": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tunes graphics for Apple silicon Macs."
+          }
+        }
+      }
+    },
+    "whatsNew.bugFixes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bug fixes"
+          }
+        }
+      }
+    },
+    "whatsNew.bullet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "•"
+          }
+        }
+      }
+    },
+    "whatsNew.button": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's New"
+          }
+        }
+      }
+    },
+    "whatsNew.intro": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What each version of Warzag changed, newest first."
+          }
+        }
+      }
+    },
+    "whatsNew.major": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Major"
+          }
+        }
+      }
+    },
+    "whatsNew.minor": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minor"
+          }
+        }
+      }
+    },
+    "whatsNew.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This build of Warzag has no list of changes to show."
+          }
+        }
+      }
+    },
+    "whatsNew.notReleased": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not released yet"
+          }
+        }
+      }
+    },
+    "whatsNew.released": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, released %2$@"
+          }
+        }
+      }
+    },
+    "whatsNew.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's New in Warzag"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

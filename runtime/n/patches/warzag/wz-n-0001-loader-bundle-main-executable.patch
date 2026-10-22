@@ -1,0 +1,43 @@
+Run the Wine loader as the app bundle's main executable.
+
+The loader is Warzag.app/Contents/MacOS/wine, so every Wine process has the bundle's identity (Game Mode, Dock,
+privacy approvals). It finds ntdll.so in Contents/lib/wine/aarch64-unix, and child processes start through
+<bindir>/wine, ahead of neutron's Neutron.app paths.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/loader/main.c
++++ b/loader/main.c
+@@ -159,6 +159,16 @@
+         path = build_path( dir, "ntdll.so" );
+ 
+     handle = dlopen( path, RTLD_NOW );
++#ifdef __APPLE__
++    /* In the app bundle the loader is Contents/MacOS/wine and ntdll.so is in Contents/lib/wine. */
++    if (!handle && !p)
++    {
++        static const char bundle_ntdll[] = "../lib/wine/aarch64-unix/ntdll.so";
++        free( path );
++        path = build_path( dir, bundle_ntdll );
++        handle = dlopen( path, RTLD_NOW );
++    }
++#endif
+     free( p );
+     free( dir );
+     free( path );
+--- a/dlls/ntdll/unix/loader.c
++++ b/dlls/ntdll/unix/loader.c
+@@ -409,6 +409,13 @@
+             if (!access( bundled, X_OK )) wineloader = bundled;
+             else free( bundled );
+         }
++        /* Child processes start through the app bundle's main executable (BINDIR/wine) to keep the bundle's
++         * identity; it takes precedence over the Neutron.app paths above. */
++        {
++            char *bundle_loader = build_path( bin_dir, "wine" );
++            if (!access( bundle_loader, X_OK )) wineloader = bundle_loader;
++            else free( bundle_loader );
++        }
+ #endif
+     }
+ 

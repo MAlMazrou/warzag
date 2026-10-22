@@ -1,0 +1,20 @@
+Static app-icon entries, so the unix side gets every icon size.
+
+macdrv_app_icon() passes its icon entries to the unix side with NtCallbackReturn(), and in an ARM64EC process only
+the first entry of a stack array arrives intact. The callback runs once per process (pthread_once in set_app_icon).
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/dlls/winemac.drv/dllmain.c
++++ b/dlls/winemac.drv/dllmain.c
+@@ -254,7 +254,9 @@
+  */
+ static NTSTATUS WINAPI macdrv_app_icon(void *arg, ULONG size)
+ {
+-    struct app_icon_entry entries[64];
++    /* Static: NtCallbackReturn passes the unix side a pointer to these entries, and in an ARM64EC process only the
++       first entry of a stack array arrives intact. This runs once per process (pthread_once in set_app_icon). */
++    static struct app_icon_entry entries[64];
+     HRSRC res_info;
+     HGLOBAL res_data;
+     GRPICONDIR *icon_dir;

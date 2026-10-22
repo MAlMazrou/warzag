@@ -1,0 +1,27 @@
+# CHANGELOG.md must keep its format, and a change players get needs an entry under "## [Unreleased]" or a
+# "Changelog: none" line in its commit message (rules at the top of CHANGELOG.md).
+name: changelog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  changelog:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check the format
+        run: python3 -I tools/release/changelog.py check
+      - name: Require an entry for what players get
+        env:
+          BEFORE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          AFTER: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: python3 -I tools/release/changelog.py require-entry --range "$BEFORE..$AFTER"

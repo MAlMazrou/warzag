@@ -1,0 +1,381 @@
+Finish a Wine thread's exit when one of its pthread TSD destructors faults.
+
+Without this, segv_handler() dereferences NULL thread data and the thread retries the fault forever, so the process
+never exits. pthread_exit_wrapper() records the exiting thread, and the arm64 signal handlers send a fault in its TSD
+destructors to warzag_exit_after_teardown_fault(), which clears the next TSD key and calls pthread_exit() again.
+abort(), __builtin_trap() and unresolved faults of threads without Wine data stay fatal. Test: qa/n/exit-hang.sh.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/dlls/ntdll/unix/unix_private.h
++++ b/dlls/ntdll/unix/unix_private.h
+@@ -145,6 +145,15 @@
+ #endif
+ #endif
+ 
++#ifdef __APPLE__
++/* Threads whose pthread TSD destructors fault while they exit, see thread.c. */
++extern void warzag_record_thread_teardown( struct thread_data *data, void *frame );
++extern void warzag_forget_thread_teardown( struct thread_data *data );
++extern int warzag_thread_in_teardown( struct thread_data *data, ULONG_PTR sp, ULONG_PTR handler_sp, ULONG_PTR *frame,
++                                      struct thread_data **block );
++extern void DECLSPEC_NORETURN warzag_exit_after_teardown_fault( unsigned int slot );
++#endif
++
+ static inline struct thread_data *get_thread_data(void)
+ {
+     return pthread_getspecific( thread_data_key );
+--- a/dlls/ntdll/unix/thread.c
++++ b/dlls/ntdll/unix/thread.c
+@@ -1110,6 +1110,141 @@
+ }
+ 
+ 
++#ifdef __APPLE__
++/* Finish a thread's exit when one of its pthread TSD destructors faults.
++ *
++ * After pthread_exit_wrapper() closes the thread's server fds and calls pthread_exit(), only libpthread's TSD
++ * destructors run on the thread, in rounds (PTHREAD_DESTRUCTOR_ITERATIONS): the keys made by pthread_key_create()
++ * (256..767) in index order, then the static keys of system libraries (10..255, the Objective-C GC keys 80..89 last),
++ * each slot cleared before its destructor runs. thread_data_key and the WINE_TEB_IN_TSD teb key are dynamic keys
++ * without a destructor, made by virtual_init(), so the destructors of later keys (the Objective-C autorelease pool's
++ * static key) run with get_thread_data() == NULL. A fault in a destructor must neither dereference NULL thread data
++ * nor return from NtTerminateThread into Windows code: signal_arm64.c sends the thread to
++ * warzag_exit_after_teardown_fault().
++ *
++ * Each exiting thread records pthread_self(), its thread data block (which holds its kernel stack and its signal
++ * stack) and pthread_exit_wrapper()'s frame. exit_thread() forgets the entry once pthread_join() has reaped the
++ * thread, before the block is freed, as its pthread_t can be reused at once. A signal handler cannot take a lock: it
++ * only reads the ring, and trusts an entry only when it runs on that entry's signal stack and the fault SP lies below
++ * the recorded frame in the same block. */
++
++#define WARZAG_TEARDOWN_RING        256u   /* power of two; exit_thread() serializes exits, a few slots are in use */
++#define WARZAG_TEARDOWN_MAX_ROUNDS  64     /* after this many faults of one thread, clear every key */
++#define WARZAG_TSD_STATIC_FIRST     10     /* libpthread's own keys are 0..9 */
++#define WARZAG_TSD_DYNAMIC_FIRST    256    /* pthread_key_create() hands out keys from here */
++#define WARZAG_TSD_DYNAMIC_END      (256 + 512)  /* PTHREAD_KEYS_MAX == 512 */
++#define WARZAG_TSD_GC_FIRST         80     /* __PTK_FRAMEWORK_GC_KEY0..9: destroyed after all the others */
++#define WARZAG_TSD_GC_END           90
++
++struct warzag_teardown_entry
++{
++    pthread_t volatile           thread;  /* published last; 0 when free or when the thread was reaped */
++    struct thread_data *volatile data;    /* the thread's data block */
++    ULONG_PTR volatile           frame;   /* pthread_exit_wrapper()'s frame address */
++    ULONG volatile               seq;     /* recording order: the newest matching entry wins */
++    int volatile                 rounds;  /* teardown faults handled for this thread */
++};
++static struct warzag_teardown_entry warzag_teardown_ring[WARZAG_TEARDOWN_RING];
++static LONG warzag_teardown_seq;
++
++void warzag_record_thread_teardown( struct thread_data *data, void *frame )
++{
++    ULONG seq = (ULONG)InterlockedIncrement( &warzag_teardown_seq );
++    struct warzag_teardown_entry *e = &warzag_teardown_ring[seq & (WARZAG_TEARDOWN_RING - 1)];
++
++    e->thread = 0;
++    __sync_synchronize();
++    e->data   = data;
++    e->frame  = (ULONG_PTR)frame;
++    e->seq    = seq;
++    e->rounds = 0;
++    __sync_synchronize();
++    e->thread = pthread_self();
++}
++
++/* Called by exit_thread() once pthread_join() has reaped the thread that owned data, before its block is freed. */
++void warzag_forget_thread_teardown( struct thread_data *data )
++{
++    unsigned int i;
++
++    for (i = 0; i < WARZAG_TEARDOWN_RING; i++)
++    {
++        struct warzag_teardown_entry *e = &warzag_teardown_ring[i];
++        pthread_t thread = e->thread;
++
++        if (thread && e->data == data)
++            InterlockedCompareExchangePointer( (void *volatile *)&e->thread, NULL, (void *)thread );
++    }
++}
++
++/* Whether the current thread is in teardown, from a signal handler: async-signal-safe, plain reads of the ring. sp is
++ * the fault's SP, handler_sp an address on the handler's own stack, data get_thread_data() (when set, the entry must
++ * be that block). Returns the newest matching slot + 1 with its frame and block, or 0. */
++int warzag_thread_in_teardown( struct thread_data *data, ULONG_PTR sp, ULONG_PTR handler_sp, ULONG_PTR *frame_ret,
++                               struct thread_data **block_ret )
++{
++    pthread_t self = pthread_self();
++    ULONG best_seq = 0;
++    int best = 0;
++    unsigned int i;
++
++    for (i = 0; i < WARZAG_TEARDOWN_RING; i++)
++    {
++        struct warzag_teardown_entry *e = &warzag_teardown_ring[i];
++        struct thread_data *block;
++        ULONG_PTR frame, lo, hi;
++        ULONG seq;
++
++        if (!e->thread || !pthread_equal( e->thread, self )) continue;
++        __sync_synchronize();
++        block = e->data;
++        frame = e->frame;
++        seq   = e->seq;
++        if (!block || (data && block != data)) continue;
++        /* Wine gives each thread its own signal stack inside its data block: running on it proves the block is ours */
++        if (!is_inside_signal_stack( block, (void *)handler_sp )) continue;
++        lo = (ULONG_PTR)block->signal_stack;
++        hi = (ULONG_PTR)get_kernel_stack( block ) + kernel_stack_size;
++        if (frame >= hi || frame < lo + page_size || sp < lo || sp >= frame) continue;
++        if (best && (LONG)(seq - best_seq) <= 0) continue;
++        best = i + 1;
++        best_seq = seq;
++        *frame_ret = frame;
++        *block_ret = block;
++    }
++    return best;
++}
++
++static BOOL warzag_clear_tsd_key( int key )
++{
++    return pthread_getspecific( (pthread_key_t)key ) && !pthread_setspecific( (pthread_key_t)key, NULL );
++}
++
++/* The signal handler sends the thread here (slot: the entry it matched), on pthread_exit_wrapper()'s stack with the
++ * fault signals unblocked. Clear the first TSD key that libpthread would still visit and that holds a value, then
++ * call pthread_exit() again, which starts the destructor rounds over. That key is the faulting destructor's own when
++ * the destructor put a value back (AutoreleasePoolPage::tls_dealloc reinstates the hot page while it pops), otherwise
++ * the next one, whose destructor is skipped: a leak in an exiting thread, but a destructor that faulted never runs
++ * twice. After WARZAG_TEARDOWN_MAX_ROUNDS faults of the thread every key is cleared, so the thread always exits. */
++void DECLSPEC_NORETURN warzag_exit_after_teardown_fault( unsigned int slot )
++{
++    struct warzag_teardown_entry *e = &warzag_teardown_ring[slot & (WARZAG_TEARDOWN_RING - 1)];
++    BOOL all = ++e->rounds >= WARZAG_TEARDOWN_MAX_ROUNDS;
++    int key;
++
++    /* libpthread's visit order: dynamic keys, static keys but the GC ones, GC keys */
++    for (key = WARZAG_TSD_DYNAMIC_FIRST; key < WARZAG_TSD_DYNAMIC_END; key++)
++        if (warzag_clear_tsd_key( key ) && !all) goto done;
++    for (key = WARZAG_TSD_STATIC_FIRST; key < WARZAG_TSD_DYNAMIC_FIRST; key++)
++        if ((key < WARZAG_TSD_GC_FIRST || key >= WARZAG_TSD_GC_END) && warzag_clear_tsd_key( key ) && !all) goto done;
++    for (key = WARZAG_TSD_GC_FIRST; key < WARZAG_TSD_GC_END; key++)
++        if (warzag_clear_tsd_key( key ) && !all) goto done;
++done:
++    pthread_exit( NULL );
++}
++#endif  /* __APPLE__ */
++
++
+ /***********************************************************************
+  *           pthread_exit_wrapper
+  */
+@@ -1125,6 +1260,10 @@
+     close( data->wait_fd[1] );
+     close( data->reply_fd );
+     close( data->request_fd );
++#ifdef __APPLE__
++    /* Only TSD destructors run on this thread from now on, see warzag_exit_after_teardown_fault(). */
++    warzag_record_thread_teardown( data, __builtin_frame_address(0) );
++#endif
+     pthread_exit( UIntToPtr(status) );
+ }
+ 
+@@ -1532,6 +1671,9 @@
+         if (data->pthread_id)
+         {
+             pthread_join( data->pthread_id, NULL );
++#ifdef __APPLE__
++            warzag_forget_thread_teardown( data );
++#endif
+             virtual_free_thread_data( data );
+         }
+     }
+--- a/dlls/ntdll/unix/signal_arm64.c
++++ b/dlls/ntdll/unix/signal_arm64.c
+@@ -1215,6 +1215,95 @@
+ }
+ #endif
+ 
++#ifdef __APPLE__
++/* One line to stderr, without stdio: called from signal handlers. */
++static void warzag_sig_report( const char *what, int sig, ULONG_PTR pc, ULONG_PTR addr )
++{
++    static const char hex[] = "0123456789abcdef";
++    char buf[192];
++    size_t n = 0;
++    const char *p;
++    int field;
++    ULONG_PTR vals[3];
++
++    for (p = "warzag[wz-n-0011]: "; *p && n < sizeof(buf); p++) buf[n++] = *p;
++    for (p = what; *p && n < sizeof(buf) - 64; p++) buf[n++] = *p;
++    if (n < sizeof(buf) - 48) { buf[n++] = ' '; buf[n++] = 's'; buf[n++] = 'i'; buf[n++] = 'g'; buf[n++] = '='; }
++    if (sig >= 100) buf[n++] = '0' + (sig / 100) % 10;
++    if (sig >= 10)  buf[n++] = '0' + (sig / 10) % 10;
++    buf[n++] = '0' + sig % 10;
++
++    vals[0] = pc; vals[1] = addr; vals[2] = (ULONG_PTR)pthread_self();
++    for (field = 0; field < 3; field++)
++    {
++        int shift;
++        const char *label = field == 0 ? " pc=0x" : field == 1 ? " addr=0x" : " thread=0x";
++        for (p = label; *p && n < sizeof(buf); p++) buf[n++] = *p;
++        for (shift = (int)(sizeof(ULONG_PTR) * 8 - 4); shift >= 0 && n < sizeof(buf); shift -= 4)
++            buf[n++] = hex[(vals[field] >> shift) & 0xf];
++    }
++    if (n < sizeof(buf)) buf[n++] = '\n';
++    write( 2, buf, n );
++}
++
++/* A signal on a thread that is not, or no longer, a running Wine thread: one without Wine thread data (a native
++ * thread, or a Wine thread whose TSD keys libpthread has cleared), or one that recorded itself in
++ * pthread_exit_wrapper() and runs its TSD destructors (its server fds are closed, so it must not run Windows code
++ * again). Returns FALSE for any other thread. Otherwise returns TRUE, and the caller must return from the handler:
++ *  - retry: virtual_handle_fault() consumed a guard page, so the access is retried;
++ *  - may_redirect (SIGSEGV, SIGBUS, SIGILL) in a thread in teardown: it resumes in warzag_exit_after_teardown_fault();
++ *  - anything else (a native thread's fault; SIGTRAP, SIGABRT or SIGFPE in teardown, from abort(), __builtin_trap()
++ *    or os_crash(), which must stay fatal, and Apple's abort() blocks nearly every signal in every thread before its
++ *    final brk): the signal is reset to SIG_DFL and raised again, so the process crashes as it would without Wine. */
++static BOOL warzag_fault_outside_wine( struct thread_data *data, int sig, siginfo_t *siginfo, ucontext_t *sigcontext,
++                                       BOOL may_redirect, BOOL retry )
++{
++    ULONG_PTR sp = (ULONG_PTR)SP_sig(sigcontext), frame = 0;
++    struct thread_data *block = NULL;
++    struct sigaction act;
++    int slot;
++
++    /* fast path: a running Wine thread that faults outside its kernel and signal stacks is in Windows code */
++    if (data && !is_inside_syscall( data, sp ) && !is_inside_signal_stack( data, (void *)sp )) return FALSE;
++    slot = warzag_thread_in_teardown( data, sp, (ULONG_PTR)&frame, &frame, &block );
++    if (!slot && data) return FALSE;
++    if (retry) return TRUE;
++
++    if (slot && may_redirect)
++    {
++        warzag_sig_report( "exiting-thread fault in a TSD destructor, finishing teardown",
++                           sig, PC_sig(sigcontext), (ULONG_PTR)siginfo->si_addr );
++        SP_sig(sigcontext) = (frame - 256) & ~(ULONG_PTR)15;  /* below pthread_exit_wrapper()'s frame, same stack */
++        PC_sig(sigcontext) = (ULONG_PTR)warzag_exit_after_teardown_fault;
++        REGn_sig(0, sigcontext) = slot - 1;
++        FP_sig(sigcontext) = 0;
++        LR_sig(sigcontext) = 0;
++        /* resume with the fault signals unblocked (a fault inside a signal handler has them blocked), and tell the
++         * kernel whether the new SP is on the thread's signal stack */
++        sigdelset( &sigcontext->uc_sigmask, SIGSEGV );
++        sigdelset( &sigcontext->uc_sigmask, SIGBUS );
++        sigdelset( &sigcontext->uc_sigmask, SIGILL );
++        sigdelset( &sigcontext->uc_sigmask, SIGTRAP );
++        sigdelset( &sigcontext->uc_sigmask, SIGFPE );
++        sigcontext->uc_onstack = is_inside_signal_stack( block, (void *)SP_sig(sigcontext) ) ? 1 : 0;
++        return TRUE;
++    }
++
++    warzag_sig_report( slot ? "fatal signal in an exiting thread, crashing"
++                            : "fault on a thread with no Wine data, crashing",
++                       sig, PC_sig(sigcontext), (ULONG_PTR)siginfo->si_addr );
++    act.sa_handler = SIG_DFL;
++    sigemptyset( &act.sa_mask );
++    act.sa_flags = 0;
++    sigaction( sig, &act, NULL );
++    /* Blocked inside this handler, the signal is taken with SIG_DFL as soon as the handler returns, even when the
++     * faulting instruction would not fault again. pthread_kill() refuses a thread inside pthread_exit() (ESRCH): there
++     * a brk faults again anyway, and a sent SIGABRT/SIGFPE goes to the process. */
++    if (pthread_kill( pthread_self(), sig ) && (sig == SIGABRT || sig == SIGFPE)) kill( getpid(), sig );
++    return TRUE;
++}
++#endif  /* __APPLE__ */
++
+ static void segv_handler( int signal, siginfo_t *siginfo, void *_sigcontext )
+ {
+     ucontext_t *sigcontext = _sigcontext;
+@@ -1240,6 +1329,10 @@
+     case ESR_ELx_EC_DABT_CUR:
+         if (ESR_ELx_ISS_DFSC(esr) == ESR_ELx_ISS_DFSC_ALIGN_FAULT)
+         {
++#ifdef __APPLE__
++            /* No Windows exception for a thread in teardown or without Wine data. */
++            if (warzag_fault_outside_wine( data, signal, siginfo, sigcontext, TRUE, FALSE )) return;
++#endif
+             rec.ExceptionCode = EXCEPTION_DATATYPE_MISALIGNMENT;
+             save_context( &context, sigcontext );
+             setup_raise_exception( data, sigcontext, &rec, &context );
+@@ -1259,6 +1352,15 @@
+     rec.NumberParameters = 2;
+ 
+     if (!virtual_handle_fault( data, &rec, (void *)SP_sig(sigcontext) )) return;
++#ifdef __APPLE__
++    /* An unresolved fault in a thread in teardown or without Wine data: finish the thread's exit or crash, as
++     * handle_syscall_fault() would dereference NULL data or return from NtTerminateThread into Windows code. A unix
++     * __TRY block (data->jmp_buf) still gets its longjmp. */
++    if (!(data && data->jmp_buf) &&
++        warzag_fault_outside_wine( data, signal, siginfo, sigcontext, TRUE,
++                                   rec.ExceptionCode == STATUS_GUARD_PAGE_VIOLATION ))
++        return;
++#endif
+     if (handle_syscall_fault( data, sigcontext, &rec )) return;
+ 
+     save_context( &context, sigcontext );
+@@ -1293,6 +1395,9 @@
+         }
+     }
+ 
++#ifdef __APPLE__
++    if (warzag_fault_outside_wine( data, signal, siginfo, sigcontext, TRUE, FALSE )) return;
++#endif
+     save_context( &context, sigcontext );
+     setup_raise_exception( data, sigcontext, &rec, &context );
+ }
+@@ -1312,6 +1417,10 @@
+                              .ExceptionAddress = (void *)PC_sig(sigcontext) };
+     DWORD64 esr = 0;
+ 
++#ifdef __APPLE__
++    /* In teardown or without Wine data, SIGTRAP, SIGFPE and SIGABRT are fatal. */
++    if (warzag_fault_outside_wine( data, signal, siginfo, sigcontext, FALSE, FALSE )) return;
++#endif
+     save_context( &context, sigcontext );
+ 
+ #ifdef linux
+@@ -1377,6 +1486,10 @@
+     CONTEXT context;
+     EXCEPTION_RECORD rec = { .ExceptionAddress = (void *)PC_sig(sigcontext) };
+ 
++#ifdef __APPLE__
++    /* In teardown or without Wine data, SIGTRAP, SIGFPE and SIGABRT are fatal. */
++    if (warzag_fault_outside_wine( data, signal, siginfo, sigcontext, FALSE, FALSE )) return;
++#endif
+     switch (siginfo->si_code & 0xffff )
+     {
+ #ifdef FPE_FLTSUB
+@@ -1456,6 +1569,10 @@
+                              .ExceptionFlags = EXCEPTION_NONCONTINUABLE,
+                              .ExceptionAddress = (void *)PC_sig(sigcontext) };
+ 
++#ifdef __APPLE__
++    /* In teardown or without Wine data, SIGTRAP, SIGFPE and SIGABRT are fatal. */
++    if (warzag_fault_outside_wine( data, signal, siginfo, sigcontext, FALSE, FALSE )) return;
++#endif
+     save_context( &context, sigcontext );
+     setup_raise_exception( data, sigcontext, &rec, &context );
+ }
+--- a/dlls/ntdll/unix/virtual.c
++++ b/dlls/ntdll/unix/virtual.c
+@@ -4763,6 +4763,8 @@
+     WOW_TEB *wow_teb;
+     size_t min_guaranteed = max( page_size * (is_win64 ? 2 : 1), host_page_size );
+ 
++    /* A thread without Wine thread data (a native thread, or one in pthread teardown) has no Wine stack. */
++    if (!data) return FALSE;
+     if (!(teb = data->teb)) return FALSE;
+     stack->start = teb->DeallocationStack;
+     stack->limit = teb->Tib.StackLimit;
+@@ -4850,7 +4852,8 @@
+     {
+         if (vprot & VPROT_WRITEWATCH)
+         {
+-            if (enable_write_exceptions && is_vprot_exec_write( vprot ) && !data->allow_writes)
++            /* data is NULL on a thread without Wine thread data, whose write-watch faults are still cleared. */
++            if (enable_write_exceptions && is_vprot_exec_write( vprot ) && !(data && data->allow_writes))
+             {
+                 rec->NumberParameters = 3;
+                 rec->ExceptionInformation[2] = STATUS_EXECUTABLE_MEMORY_WRITE;

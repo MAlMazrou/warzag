@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "note": "Sources of the engine's TLS and font libraries, pinned by SHA-256. tools/fetch-inputs.sh downloads and verifies them into $WARZAG_CACHE (default ~/Library/Caches/warzag-build); runtime/n/fetch.sh runs it along with the engine's own inputs (runtime/n/inputs.lock.json).",
+  "archives": {
+    "crossover-sources": {
+      "version": "26.3.0",
+      "url": "https://media.codeweavers.com/pub/crossover/source/crossover-sources-26.3.0.tar.gz",
+      "sha256": "ac99c8ca4b3848f3e81784135f023df266b61c2345726ea55a50b3e030dd6872",
+      "size": 149054023,
+      "license": "Per subdirectory: each project keeps its own license",
+      "use": "gmp, gnutls and freetype sources for the engine's arm64 libraries (runtime/n/build.sh deps)"
+    },
+    "nettle": {
+      "version": "3.10.2",
+      "url": "https://ftp.gnu.org/gnu/nettle/nettle-3.10.2.tar.gz",
+      "sha256": "fe9ff51cb1f2abb5e65a6b8c10a92da0ab5ab6eaf26e7fc2b675c45f1fb519b5",
+      "size": 2644644,
+      "license": "LGPL-3.0-or-later OR GPL-2.0-or-later",
+      "use": "nettle for gnutls (the CrossOver tarball ships nettle without its Makefile.in templates)",
+      "pinned_by": "TOFU from ftp.gnu.org over HTTPS"
+    }
+  }
+}

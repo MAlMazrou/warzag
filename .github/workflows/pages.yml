@@ -1,0 +1,103 @@
+# Checks, builds and deploys the download site (site/) to GitHub Pages; site/README.md explains it.
+# No secrets: only the workflow's own GITHUB_TOKEN, with the permissions each job asks for below.
+# Nothing is deployed until the latest release carries Warzag.dmg, Warzag.dmg.sha256, install.sh and
+# Warzag.manifest.json.
+# One-time setup in the repository: Settings > Pages > Build and deployment > Source: GitHub Actions.
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "qa/site/**"
+      - ".github/workflows/pages.yml"
+      # The checks build a release's install.sh from these, as App/make-app.sh --dmg does.
+      - "tools/release/install.sh"
+      - "App/make-app.sh"
+      # The Changes page, which the build makes from CHANGELOG.md with changelog.py. It lists only the releases
+      # already out, so a release's section shows from the run after the release (below).
+      - "CHANGELOG.md"
+      - "tools/release/changelog.py"
+  pull_request:
+    paths:
+      - "site/**"
+      - "qa/site/**"
+      - ".github/workflows/pages.yml"
+      - "tools/release/install.sh"
+      - "App/make-app.sh"
+      - "CHANGELOG.md"
+      - "tools/release/changelog.py"
+  release:
+    types: [published]
+  schedule:
+    # Daily, so the checksum and the Changes page follow the latest release even if a release's own run was missed,
+    # or the release was withdrawn (marked as a pre-release again).
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('site-pr-{0}', github.event.pull_request.number) || 'site-pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # A release event runs on the release's tag, which the github-pages environment does not deploy from. Start this
+  # workflow again on the default branch instead (GITHUB_TOKEN may start workflow_dispatch runs), so the page shows
+  # the new release's checksum as soon as the release is published.
+  after-release:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+    steps:
+      - name: Run this workflow on the default branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: gh workflow run pages.yml --repo "$REPOSITORY" --ref "$BRANCH"
+
+  build:
+    if: github.event_name != 'release'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      released: ${{ steps.site.outputs.released }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check the site
+        run: python3 -I qa/site/site-test.py
+      # build.py adds released=true or released=false to this step's outputs.
+      - name: Build the site
+        id: site
+        run: python3 -I site/build.py --repo "$GITHUB_REPOSITORY" --fetch-release --out _site
+      # Before the first release the Download link and the FAQ's Terminal command would lead to GitHub 404s: such a
+      # site is built and checked (pull requests still see the placeholder build), never deployed.
+      - name: No release yet, so nothing to deploy
+        if: github.event_name != 'pull_request' && steps.site.outputs.released != 'true'
+        run: echo "::notice title=Site not deployed::The latest release has no Warzag.dmg, Warzag.dmg.sha256, install.sh or Warzag.manifest.json yet, so the site was built and checked but not deployed."
+      - name: Upload the site
+        if: github.event_name != 'pull_request' && steps.site.outputs.released == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'release' && github.event_name != 'pull_request' && needs.build.outputs.released == 'true'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

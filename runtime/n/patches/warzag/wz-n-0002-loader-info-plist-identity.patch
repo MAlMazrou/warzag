@@ -1,0 +1,36 @@
+Warzag's identity in the loader's embedded Info.plist.
+
+com.warzag.gamehost, "Warzag", public.app-category.action-games, LSSupportsGameMode and GCSupportsGameMode, as in the
+bundle's Contents/Info.plist (runtime/gamehost/Info.plist.in), which takes precedence inside the bundle. Applies
+after neutron's wine 0006.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/loader/wine_info.plist.in
++++ b/loader/wine_info.plist.in
+@@ -9,11 +9,11 @@
+     <key>CFBundleExecutable</key>
+     <string>wine</string>
+     <key>CFBundleIdentifier</key>
+-    <string>org.winehq.wine</string>
++    <string>com.warzag.gamehost</string>
+     <key>CFBundleInfoDictionaryVersion</key>
+     <string>6.0</string>
+     <key>CFBundleName</key>
+-    <string>Wine</string>
++    <string>Warzag</string>
+     <key>CFBundlePackageType</key>
+     <string>APPL</string>
+     <key>CFBundleShortVersionString</key>
+@@ -27,8 +27,10 @@
+     <key>LSUIElement</key>
+     <string>1</string>
+     <key>LSApplicationCategoryType</key>
+-    <string>public.app-category.games</string>
++    <string>public.app-category.action-games</string>
+     <key>LSSupportsGameMode</key>
+     <true/>
++    <key>GCSupportsGameMode</key>
++    <true/>
+ </dict>
+ </plist>

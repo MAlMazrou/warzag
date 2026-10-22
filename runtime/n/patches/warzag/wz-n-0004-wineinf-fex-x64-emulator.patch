@@ -1,0 +1,18 @@
+Register FEX as the x86-64 emulator in wine.inf.
+
+Wine's ARM64EC loader loads the DLL named by HKLM\Software\Microsoft\Wow64\amd64, and Wine's own xtajit64.dll is a
+stub. With libarm64ecfex.dll there, every new prefix runs x86-64 code under FEX.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/loader/wine.inf.in
++++ b/loader/wine.inf.in
+@@ -401,7 +401,7 @@
+ HKLM,%CurrentVersion%,"CommonFilesDir (x86)",,"%16428%"
+ HKLM,%CurrentVersion%,"ProgramFilesDir (Arm)",,"C:\Program Files (Arm)"
+ HKLM,%CurrentVersion%,"CommonFilesDir (Arm)",,"C:\Program Files (Arm)\Common Files"
+-HKLM,Software\Microsoft\Wow64\amd64,,2,"xtajit64.dll"
++HKLM,Software\Microsoft\Wow64\amd64,,2,"libarm64ecfex.dll"
+ HKLM,Software\Microsoft\Wow64\arm,,2,"wowarmhw.dll"
+ HKLM,Software\Microsoft\Wow64\x86,,2,"xtajit.dll"
+ 

@@ -1,0 +1,60 @@
+Make the Dock icon one image in several pixel densities.
+
+The densest representation comes first and every representation is sized like the largest one, so AppKit picks a
+dense representation for any size it draws.
+
+License: LGPL-2.1-or-later (a change to Wine).
+
+--- a/dlls/winemac.drv/cocoa_app.m
++++ b/dlls/winemac.drv/cocoa_app.m
+@@ -1137,31 +1137,41 @@
+ 
+         if ([images count])
+         {
++            NSMutableArray* reps = [NSMutableArray arrayWithCapacity:[images count]];
+             NSSize bestSize = NSZeroSize;
+             id image;
+ 
+-            nsimage = [[[NSImage alloc] initWithSize:NSZeroSize] autorelease];
+-
+             for (image in images)
+             {
+                 CGImageRef cgimage = (CGImageRef)image;
+-                NSBitmapImageRep* imageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgimage];
++                NSBitmapImageRep* imageRep = [[[NSBitmapImageRep alloc] initWithCGImage:cgimage] autorelease];
+                 if (imageRep)
+                 {
+                     NSSize size = [imageRep size];
+ 
+-                    [nsimage addRepresentation:imageRep];
+-                    [imageRep release];
++                    [reps addObject:imageRep];
+ 
+                     if (MIN(size.width, size.height) > MIN(bestSize.width, bestSize.height))
+                         bestSize = size;
+                 }
+             }
+ 
+-            if ([[nsimage representations] count] && bestSize.width && bestSize.height)
+-                [nsimage setSize:bestSize];
+-            else
+-                nsimage = nil;
++            if ([reps count] && bestSize.width && bestSize.height)
++            {
++                /* One image in several pixel densities: the densest first and every representation with the
++                   largest one's size, so AppKit picks a dense representation for any size it draws. */
++                [reps sortUsingComparator:^NSComparisonResult(id a, id b) {
++                    NSInteger pixelsA = [a pixelsWide] * [a pixelsHigh], pixelsB = [b pixelsWide] * [b pixelsHigh];
++                    if (pixelsA == pixelsB) return NSOrderedSame;
++                    return pixelsA > pixelsB ? NSOrderedAscending : NSOrderedDescending;
++                }];
++                nsimage = [[[NSImage alloc] initWithSize:bestSize] autorelease];
++                for (NSBitmapImageRep* rep in reps)
++                {
++                    [rep setSize:bestSize];
++                    [nsimage addRepresentation:rep];
++                }
++            }
+         }
+ 
+         self.applicationIcon = nsimage;

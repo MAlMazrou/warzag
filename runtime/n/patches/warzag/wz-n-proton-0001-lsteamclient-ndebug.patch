@@ -1,0 +1,19 @@
+Build lsteamclient with NDEBUG.
+
+STEAMCLIENT_CALL asserts that every unix call succeeded. Without Mac Steam, CreateInterface must return NULL instead,
+so SteamAPI_Init fails and the game falls back to its own login. The unix side has no assert(). Applies in
+dlls/lsteamclient after neutron's proton 0001 and 0002.
+
+License: Steamworks SDK license (a change to Valve's lsteamclient, whose sources are fetched at build time).
+
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -3,7 +3,7 @@
+ UNIX_LIBS = -lc++
+ IMPORTS   = user32 ws2_32
+ 
+-EXTRADEFS = -DSTEAM_API_EXPORTS -Dprivate=public -Dprotected=public
++EXTRADEFS = -DSTEAM_API_EXPORTS -Dprivate=public -Dprotected=public -DNDEBUG
+ 
+ SOURCES = \
+ 	steam_input_manual.c \

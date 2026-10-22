@@ -1,0 +1,58 @@
+Warzag
+Copyright (C) 2026 Warzag contributors
+Licensed under the GNU General Public License v3.0 (LICENSE).
+
+Warzag.app contains only Warzag's own code. The engine it downloads (the runtime pack) and the Steam bridge in it are
+built from the third-party components below, each under its own license. The engine carries their license texts in
+Contents/Resources/licenses and Contents/share/warzag/bridge/licenses.
+
+The corresponding source of the LGPL components (Wine, DXMT, GnuTLS, GMP, Nettle) is published with each release that
+ships an engine: an archive of their pinned upstream sources, and this repository at the release's tag, which holds
+the patches and build scripts (docs/BUILDING.md).
+
+
+Engine
+
+- Wine 11.19: LGPL-2.1-or-later. https://www.winehq.org
+  The third-party libraries in Wine's libs/ directory keep their own licenses (see the Wine source).
+- neutron, commit 0ac2574d46c186664f40b8efd0410e3d8145aa14: the build recipe and the patches applied to Wine, FEX,
+  DXMT, llvm-mingw and lsteamclient. Each patch is under the license of the project it changes; neutron's own files
+  are LGPL-2.1-or-later. https://github.com/lixsldotnet/neutron
+- A Wine patch (WINEDLLPATH_PREPEND) from highball-engine, commit bd456bb2, originally from the MacPorts
+  game-porting-toolkit port: LGPL-2.1. https://github.com/gauthierpiarrette/highball-engine
+- FEX FEX-2610, commit 14c92681f4d62cf84d901460e0358de09c8847a7: MIT. https://github.com/FEX-Emu/FEX
+  It includes code under BSD-, MIT- and Boost-style licenses: SoftFloat-3e, VIXL, xxHash, cephes, fmt, range-v3,
+  rpmalloc, tiny-json, unordered_dense, cpp-optparse and musl.
+- DXMT, commit e94c312f5c054263acf261cfa109edf13e757587: LGPL-2.1-or-later. https://github.com/3Shain/dxmt
+  It includes MIT-licensed code: NVIDIA's NVAPI headers, Microsoft's DXBC parser, parts of dxbc-spirv and DXMT's own
+  code up to v0.80.
+- LLVM 15.0.7 libraries, linked into DXMT's shader converter: Apache-2.0 WITH LLVM-exception.
+  https://github.com/llvm/llvm-project
+- llvm-mingw 20260908 runtime libraries (libc++, libunwind, compiler-rt) in the Windows-side files: Apache-2.0 WITH
+  LLVM-exception. https://github.com/mstorsjo/llvm-mingw
+- mingw-w64 runtime, commit 9f55f4a2d3b9783dab76d9808be3d6279b99ec2a: ZPL-2.1 and public domain.
+  https://www.mingw-w64.org
+- SDL 3.4.18: Zlib. https://github.com/libsdl-org/SDL
+- sdl2-compat 2.32.74: Zlib. https://github.com/libsdl-org/sdl2-compat
+- GnuTLS 3.8.3: LGPL-2.1-or-later. https://www.gnutls.org
+- Nettle 3.10.2: LGPL-3.0-or-later or GPL-2.0-or-later. https://www.lysator.liu.se/~nisse/nettle/
+- GMP 6.3.0: LGPL-3.0-or-later or GPL-2.0-or-later. https://gmplib.org
+- FreeType 2.13.3: FreeType License. https://freetype.org
+  Portions of this software are copyright (C) 2024 The FreeType Project (https://freetype.org). All rights reserved.
+
+GnuTLS, GMP and FreeType are built from CodeWeavers' CrossOver 26.3.0 source archive,
+https://www.codeweavers.com/crossover/source.
+
+
+Steam bridge
+
+- lsteamclient from Valve's Proton, branch proton_11.0, commit 5b89db940e0ebe3a137a6009a3589232fe084c09: Steamworks
+  SDK license. https://github.com/ValveSoftware/Proton
+  Fetched from Valve at build time and shipped as a separate component; it is not linked with GPL code.
+- steam.exe, derived from Proton's steam_helper: BSD-3-Clause, Copyright Valve Corporation and Warzag contributors.
+
+
+Not included
+
+Warzag does not include or redistribute Digital Extremes' or Warframe's files, Apple's D3DMetal or Game Porting
+Toolkit, Valve's Steam client or its Windows DLLs, or CrossOver binaries.

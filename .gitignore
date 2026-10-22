@@ -1,0 +1,16 @@
+# Build outputs (build inputs are cached in ~/Library/Caches/warzag-build)
+/build
+/dist/
+/.build/
+/.swiftpm/
+*.part
+.DS_Store
+# Signing material
+*.p12
+*.cer
+# Manifest-signing private keys and keychains (tools/sign, warzag-release); *.ed25519.pub is public
+*.ed25519
+*.keychain
+*.keychain-db
+# Python bytecode from the tools' tests
+__pycache__/

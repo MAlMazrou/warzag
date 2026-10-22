@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>wine</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.warzag.gamehost</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Warzag</string>
+	<key>CFBundleDisplayName</key>
+	<string>Warzag</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@VERSION@</string>
+	<key>CFBundleVersion</key>
+	<string>@BUILD@</string>
+	<!-- The engine channel. Warzag also requires Contents/MacOS/wine to be arm64 (WarzagCore's RuntimeHostChannel). -->
+	<key>WarzagRuntimeChannel</key>
+	<string>n</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.0</string>
+	<!-- Game Mode is granted per process from the bundle of the running executable (gamepolicyd). -->
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.action-games</string>
+	<key>LSSupportsGameMode</key>
+	<true/>
+	<key>GCSupportsGameMode</key>
+	<true/>
+	<!-- Background Wine processes stay out of the Dock; winemac promotes a process once it opens a window. -->
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSPrincipalClass</key>
+	<string>WineApplication</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Warframe uses the microphone for in-game voice chat.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Warframe connects directly to other players for co-op missions.</string>
+</dict>
+</plist>
