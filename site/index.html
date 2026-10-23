@@ -3,12 +3,75 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
-<title>Warzag - Play Warframe on your Mac</title>
-<meta name="description" content="Warzag is a free, open-source Mac app that installs and runs the Windows version of Warframe on Apple-silicon Macs, using your own Mac Steam login. No Rosetta, no setup steps.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; script-src 'sha256-TPhd/7IVlnW6jGZVExGjy26vfvqH/HAT76NnMBKaiUc='; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var key = "warzag-theme";
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  function saved() {
+    try { return localStorage.getItem(key); } catch (error) { return null; }
+  }
+  function apply(theme) {
+    meta.setAttribute("content", theme === "light" || theme === "dark" ? theme : "light dark");
+  }
+  var current = saved();
+  if (current !== "light" && current !== "dark") current = "system";
+  apply(current);
+  document.addEventListener("DOMContentLoaded", function () {
+    var footer = document.querySelector("footer");
+    if (!footer) return;
+    var line = document.createElement("p");
+    var small = document.createElement("small");
+    line.appendChild(small);
+    function draw() {
+      while (small.firstChild) small.removeChild(small.firstChild);
+      small.appendChild(document.createTextNode("Theme: [ "));
+      ["light", "dark", "system"].forEach(function (theme, index) {
+        if (index) small.appendChild(document.createTextNode(" | "));
+        var label = theme.charAt(0).toUpperCase() + theme.slice(1);
+        if (theme === current) {
+          var bold = document.createElement("b");
+          bold.setAttribute("aria-current", "true");
+          bold.textContent = label;
+          small.appendChild(bold);
+          return;
+        }
+        var link = document.createElement("a");
+        link.href = "#";
+        link.textContent = label;
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          current = theme;
+          try {
+            if (theme === "system") localStorage.removeItem(key);
+            else localStorage.setItem(key, theme);
+          } catch (error) {}
+          apply(theme);
+          draw();
+        });
+        small.appendChild(link);
+      });
+      small.appendChild(document.createTextNode(" ]"));
+    }
+    draw();
+    footer.appendChild(line);
+  });
+})();
+</script>
+<title>Warzag - Play Warframe on your Mac with Apple silicon</title>
+<meta name="description" content="Warzag is a free, open-source app that runs the Windows version of Warframe on Macs with Apple silicon and macOS 15 or later, with Steam or a Warframe account.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Warzag: play Warframe on your Mac">
 <meta property="og:description" content="A free, open-source Mac app that installs and runs the Windows version of Warframe on Apple-silicon Macs.">
+<meta property="og:url" content="https://OWNER.github.io/REPO/">
+<meta property="og:site_name" content="Warzag">
+<meta property="og:image" content="https://OWNER.github.io/REPO/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Warzag snail">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://OWNER.github.io/REPO/">
 <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
@@ -19,7 +82,7 @@
 <main>
 <h1><img src="icon.png" alt="" width="64" height="64"><br>Warzag</h1>
 <p>Play Warframe on your Mac.</p>
-<p><a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg"><b>Download Warzag</b></a><br>
+<p><a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg"><img src="download.png" alt="" width="64" height="64"><br><b>Download Warzag</b></a><br>
 <small>For Macs with Apple silicon and macOS 15 or later.</small></p>
 </main>
 
@@ -28,6 +91,7 @@
 </nav>
 
 <footer>
+<p><a href="https://github.com/MAlMazrou"><img src="avatar.png" alt="" width="48" height="48"><br>MAlMazrou</a></p>
 <p><small>Free and open source. Not affiliated with or endorsed by Digital Extremes or Valve.</small></p>
 </footer>
 

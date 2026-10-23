@@ -1,4 +1,4 @@
-# Warzag
+# Warzag: play Warframe on your Mac
 
 Warzag is a free, open-source Mac app that runs the Windows version of Warframe on Macs with Apple silicon. It
 installs its own engine (Wine with the FEX x86-64 emulator and DXMT for Direct3D 11 on Metal), signs in through the

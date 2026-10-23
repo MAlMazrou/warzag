@@ -3,20 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
-<title>Warzag - Frequently Asked Questions</title>
-<meta name="description" content="Answers about Warzag: account safety, the Open Anyway step, Rosetta, Steam, updates, privacy, uninstalling and the source code.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; script-src 'sha256-TPhd/7IVlnW6jGZVExGjy26vfvqH/HAT76NnMBKaiUc='; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var key = "warzag-theme";
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  function saved() {
+    try { return localStorage.getItem(key); } catch (error) { return null; }
+  }
+  function apply(theme) {
+    meta.setAttribute("content", theme === "light" || theme === "dark" ? theme : "light dark");
+  }
+  var current = saved();
+  if (current !== "light" && current !== "dark") current = "system";
+  apply(current);
+  document.addEventListener("DOMContentLoaded", function () {
+    var footer = document.querySelector("footer");
+    if (!footer) return;
+    var line = document.createElement("p");
+    var small = document.createElement("small");
+    line.appendChild(small);
+    function draw() {
+      while (small.firstChild) small.removeChild(small.firstChild);
+      small.appendChild(document.createTextNode("Theme: [ "));
+      ["light", "dark", "system"].forEach(function (theme, index) {
+        if (index) small.appendChild(document.createTextNode(" | "));
+        var label = theme.charAt(0).toUpperCase() + theme.slice(1);
+        if (theme === current) {
+          var bold = document.createElement("b");
+          bold.setAttribute("aria-current", "true");
+          bold.textContent = label;
+          small.appendChild(bold);
+          return;
+        }
+        var link = document.createElement("a");
+        link.href = "#";
+        link.textContent = label;
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          current = theme;
+          try {
+            if (theme === "system") localStorage.removeItem(key);
+            else localStorage.setItem(key, theme);
+          } catch (error) {}
+          apply(theme);
+          draw();
+        });
+        small.appendChild(link);
+      });
+      small.appendChild(document.createTextNode(" ]"));
+    }
+    draw();
+    footer.appendChild(line);
+  });
+})();
+</script>
+<title>Can you play Warframe on a Mac? Warzag FAQ</title>
+<meta name="description" content="How to play Warframe on a Mac with Warzag: which Macs work, the iPhone version, other ways to play, account safety, Open Anyway, Steam, Rosetta and updates.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Questions about Warzag">
-<meta property="og:description" content="Account safety, the Open Anyway step, Rosetta, Steam, updates, privacy, uninstalling and the source code.">
+<meta property="og:title" content="Can you play Warframe on a Mac?">
+<meta property="og:description" content="Short answers about Warzag: which Macs work, the iPhone version, other ways to play, account safety, Open Anyway, Steam, Rosetta and updates.">
+<meta property="og:url" content="https://OWNER.github.io/REPO/faq.html">
+<meta property="og:site_name" content="Warzag">
+<meta property="og:image" content="https://OWNER.github.io/REPO/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Warzag snail">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://OWNER.github.io/REPO/faq.html">
 <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
 
 <header>
+<table role="presentation" width="100%">
+<tr>
+<td>
 <nav aria-label="Site">
 <p>[ <a href="index.html">Home</a> | <a href="first-launch.html">First Launch</a> | <a href="faq.html" aria-current="page">FAQ</a> | <a href="changes.html">Changes</a> | <a href="https://github.com/OWNER/REPO">Source Code</a> ]</p>
 </nav>
+</td>
+<td align="right"><a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg"><img src="download.png" alt="" width="32" height="32" align="middle" hspace="4"><b>Download Warzag</b></a></td>
+</tr>
+</table>
 </header>
 
 <hr>
@@ -28,12 +98,16 @@
 
 <nav aria-label="Questions on this page">
 <ul>
+<li><a href="#mac">Can I play Warframe on a Mac?</a></li>
+<li><a href="#macs">Which Macs can play Warframe with Warzag?</a></li>
 <li><a href="#account">Is it safe for my Warframe account?</a></li>
 <li><a href="#open-anyway">Why do I have to click Open Anyway?</a></li>
 <li><a href="#check">How do I check my download?</a></li>
 <li><a href="#installer">Can I install Warzag without the Open Anyway step?</a></li>
 <li><a href="#rosetta">Do I need Rosetta?</a></li>
 <li><a href="#steam">Do I need Steam?</a></li>
+<li><a href="#iphone">Can I play the iPhone version of Warframe on my Mac?</a></li>
+<li><a href="#other-ways">Are there other ways to play Warframe on a Mac?</a></li>
 <li><a href="#updates">How do updates work?</a></li>
 <li><a href="#privacy">Does Warzag collect any data?</a></li>
 <li><a href="#help">Something isn't working. Where can I get help?</a></li>
@@ -41,6 +115,22 @@
 <li><a href="#source">Where is the source code?</a></li>
 </ul>
 </nav>
+
+<hr>
+
+<h2 id="mac">Can I play Warframe on a Mac?</h2>
+
+<p>Yes. Warframe has no Mac version, so Warzag installs the Windows version with Digital Extremes' own installer and runs it on your Mac. You need a Mac with Apple silicon and macOS 15 or later, and you sign in with Steam or your Warframe account.</p>
+
+<p>Warzag is free and open source, and Warframe is free to play. The <a href="first-launch.html">first-launch guide</a> shows every step.</p>
+
+<hr>
+
+<h2 id="macs">Which Macs can play Warframe with Warzag?</h2>
+
+<p>Macs with Apple silicon and macOS 15 or later, such as a MacBook Air, MacBook Pro, iMac, Mac mini, Mac Studio or Mac Pro with an M1 chip or newer. Warzag also needs 80 GB of free disk space, and it picks graphics settings to suit your Mac.</p>
+
+<p>Warzag doesn't run on Macs with an Intel processor.</p>
 
 <hr>
 
@@ -94,6 +184,26 @@
 
 <hr>
 
+<h2 id="iphone">Can I play the iPhone version of Warframe on my Mac?</h2>
+
+<p>No. On the App Store, Warframe's mobile version is offered for iPhone and iPad only, not for Mac. Warzag runs the Windows version instead.</p>
+
+<hr>
+
+<h2 id="other-ways">Are there other ways to play Warframe on a Mac?</h2>
+
+<p>Yes, a few:</p>
+
+<ul>
+<li><b>CrossOver</b>, a paid app from CodeWeavers, also runs the Windows version.</li>
+<li><b>GeForce NOW</b> streams the game from NVIDIA's servers, so it works on Macs with an Intel processor too. It needs a fast internet connection, and its free tier limits how long you can play at a time.</li>
+<li><b>Free tools</b> such as Sikarugir let you set up Wine and the Windows version yourself.</li>
+</ul>
+
+<p>Older guides suggest Whisky, whose development ended in 2025, or Boot Camp, which works only on Macs with an Intel processor.</p>
+
+<hr>
+
 <h2 id="updates">How do updates work?</h2>
 
 <ul>
@@ -141,7 +251,7 @@
 <footer>
 <p><a href="#top">Back to top</a></p>
 <p><small>Warzag is free software under the <a href="https://github.com/OWNER/REPO/blob/main/LICENSE">GPL-3.0 license</a>. Its code is on <a href="https://github.com/OWNER/REPO">GitHub</a>.</small></p>
-<p><small>Warzag is an unofficial community project. It is not affiliated with or endorsed by Digital Extremes or Valve. Warframe is a trademark of Digital Extremes Ltd. Steam is a trademark of Valve Corporation. Mac and macOS are trademarks of Apple Inc.</small></p>
+<p><small>Warzag is an unofficial community project. It is not affiliated with or endorsed by Digital Extremes or Valve. Warframe is a trademark of Digital Extremes Ltd. Steam is a trademark of Valve Corporation. Mac and macOS are trademarks of Apple Inc. Other names may be trademarks of their owners.</small></p>
 </footer>
 </body>
 </html>

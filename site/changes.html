@@ -3,20 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
-<title>Warzag - Changes</title>
-<meta name="description" content="What changed in each version of Warzag, newest first: new features, improvements and bug fixes.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; script-src 'sha256-TPhd/7IVlnW6jGZVExGjy26vfvqH/HAT76NnMBKaiUc='; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var key = "warzag-theme";
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  function saved() {
+    try { return localStorage.getItem(key); } catch (error) { return null; }
+  }
+  function apply(theme) {
+    meta.setAttribute("content", theme === "light" || theme === "dark" ? theme : "light dark");
+  }
+  var current = saved();
+  if (current !== "light" && current !== "dark") current = "system";
+  apply(current);
+  document.addEventListener("DOMContentLoaded", function () {
+    var footer = document.querySelector("footer");
+    if (!footer) return;
+    var line = document.createElement("p");
+    var small = document.createElement("small");
+    line.appendChild(small);
+    function draw() {
+      while (small.firstChild) small.removeChild(small.firstChild);
+      small.appendChild(document.createTextNode("Theme: [ "));
+      ["light", "dark", "system"].forEach(function (theme, index) {
+        if (index) small.appendChild(document.createTextNode(" | "));
+        var label = theme.charAt(0).toUpperCase() + theme.slice(1);
+        if (theme === current) {
+          var bold = document.createElement("b");
+          bold.setAttribute("aria-current", "true");
+          bold.textContent = label;
+          small.appendChild(bold);
+          return;
+        }
+        var link = document.createElement("a");
+        link.href = "#";
+        link.textContent = label;
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          current = theme;
+          try {
+            if (theme === "system") localStorage.removeItem(key);
+            else localStorage.setItem(key, theme);
+          } catch (error) {}
+          apply(theme);
+          draw();
+        });
+        small.appendChild(link);
+      });
+      small.appendChild(document.createTextNode(" ]"));
+    }
+    draw();
+    footer.appendChild(line);
+  });
+})();
+</script>
+<title>What's new in Warzag: changes in each version</title>
+<meta name="description" content="What changed in each version of Warzag, the free app that runs Warframe on Macs with Apple silicon: new features, improvements and bug fixes, newest first.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="What's new in Warzag">
 <meta property="og:description" content="New features, improvements and bug fixes in each version of Warzag.">
+<meta property="og:url" content="https://OWNER.github.io/REPO/changes.html">
+<meta property="og:site_name" content="Warzag">
+<meta property="og:image" content="https://OWNER.github.io/REPO/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Warzag snail">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://OWNER.github.io/REPO/changes.html">
 <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
 
 <header>
+<table role="presentation" width="100%">
+<tr>
+<td>
 <nav aria-label="Site">
 <p>[ <a href="index.html">Home</a> | <a href="first-launch.html">First Launch</a> | <a href="faq.html">FAQ</a> | <a href="changes.html" aria-current="page">Changes</a> | <a href="https://github.com/OWNER/REPO">Source Code</a> ]</p>
 </nav>
+</td>
+<td align="right"><a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg"><img src="download.png" alt="" width="32" height="32" align="middle" hspace="4"><b>Download Warzag</b></a></td>
+</tr>
+</table>
 </header>
 
 <hr>
@@ -36,7 +106,7 @@
 <footer>
 <p><a href="#top">Back to top</a></p>
 <p><small>Warzag is free software under the <a href="https://github.com/OWNER/REPO/blob/main/LICENSE">GPL-3.0 license</a>. Its code is on <a href="https://github.com/OWNER/REPO">GitHub</a>.</small></p>
-<p><small>Warzag is an unofficial community project. It is not affiliated with or endorsed by Digital Extremes or Valve. Warframe is a trademark of Digital Extremes Ltd. Steam is a trademark of Valve Corporation. Mac and macOS are trademarks of Apple Inc.</small></p>
+<p><small>Warzag is an unofficial community project. It is not affiliated with or endorsed by Digital Extremes or Valve. Warframe is a trademark of Digital Extremes Ltd. Steam is a trademark of Valve Corporation. Mac and macOS are trademarks of Apple Inc. Other names may be trademarks of their owners.</small></p>
 </footer>
 </body>
 </html>

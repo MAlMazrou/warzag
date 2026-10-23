@@ -4,11 +4,15 @@
     python3 -I qa/site/site-test.py
 
 The pages: language, viewport, Content-Security-Policy, one h1 and headings in order, alt text, labelled landmarks, no
-scripts or resources from elsewhere, internal links and anchors that resolve, external links only to the repository,
-OWNER/REPO only inside github.com URLs, the disclaimer, nothing personal. Unstyled, as web pages were in the 1990s:
-no stylesheet or CSS of any kind, no classes, no colour-scheme tags. The home page is unchanged (its checksum), short
+script but the theme switch (one inline script, allowed by its hash) and no resources from elsewhere, internal links
+and anchors that resolve, external links only to the repository, OWNER/REPO only inside github.com URLs, the
+disclaimer, nothing personal. Unstyled, as web pages were in the 1990s: no stylesheet or CSS of any kind, no classes;
+the colour-scheme tag lets the browser follow the system's light or dark mode, and the theme switch (Light, Dark,
+System) overrides it, run in Node against a stand-in page. The home page is unchanged (its checksum), short
 and centred in the window by a layout table (quirks mode, from its HTML 3.2 doctype); the other pages share one
-header and footer. The icon. build.py: the repository filled in, --fetch-release against a local stand-in for a
+header and footer. What search engines and link previews read: each page's own title and description, its canonical
+address, and the Open Graph and X card tags with the preview image. The icon.
+build.py: the repository and the site's address filled in, the sitemap, --fetch-release against a local stand-in for a
 release (matching, mismatching, missing and half-published; its install.sh expecting another image, unfilled, or
 downloading from elsewhere; its Warzag.manifest.json and the version it offers), the released=true|false it reports
 to GitHub Actions, its refusals, and the output directory rules. The Changes page it builds from a changelog: every
@@ -26,11 +30,13 @@ import json
 import os
 import struct
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
 import urllib.request
+import xml.etree.ElementTree
 
 sys.dont_write_bytecode = True
 
@@ -40,15 +46,19 @@ BUILD = os.path.join(SITE, "build.py")
 RELEASE_TOOLS = os.path.join(ROOT, "tools", "release")
 RELEASE_FILES = ("Warzag.dmg", "Warzag.dmg.sha256", "install.sh", "Warzag.manifest.json")
 PAGES = sorted(name for name in os.listdir(SITE) if name.endswith(".html"))
-PUBLISHED = sorted(PAGES + ["icon.png"])
+PUBLISHED = sorted(PAGES + ["avatar.png", "download.png", "icon.png", "preview.png", "sitemap.xml"])
 HOME = "index.html"
 CHANGES = "changes.html"
 SUBPAGES = [name for name in PAGES if name != HOME]
 # The pages long enough to need a "Back to top" link.
 LONG_PAGES = ("changes.html", "faq.html")
 # The home page is finished: a change to it must be deliberate, and change this checksum with it.
-HOME_SHA256 = "ced4e0f6aa7d705d629aaa9845ac1740f9c02dbcb9cba49b2f0829454a816f98"
+HOME_SHA256 = "10bbd3ea03c39f5fa891e956c5aa49046c7ba5cacb071ea671c0cd96ca8dfba9"
 REPOSITORY_URL = "https://github.com/OWNER/REPO"
+# The site's own address, which build.py fills in: https://<owner>.github.io/<name>/.
+SITE_URL = "https://OWNER.github.io/REPO/"
+# The developer's GitHub profile, credited on the home page (with avatar.png, their GitHub avatar).
+DEVELOPER_URL = "https://github.com/MAlMazrou"
 SAMPLE = hashlib.sha256(b"warzag site test").hexdigest()
 # The home page's doctype puts browsers in quirks mode, where a table of height 100% fills the window: that centres
 # the page without CSS. The other pages are in standards mode.
@@ -152,6 +162,18 @@ class Page(html.parser.HTMLParser):
             self.title += data
 
 
+def theme_script(text):
+    """The text of a page's one inline script, the theme switch."""
+    match = re.search(r"<script>(.*?)</script>", text, re.S)
+    return match.group(1) if match else None
+
+
+def script_hash(text):
+    """The CSP hash of a page's theme script (base64 SHA-256 of its exact text)."""
+    script = theme_script(text)
+    return base64.b64encode(hashlib.sha256(script.encode()).digest()).decode() if script is not None else None
+
+
 def read(name, directory=SITE):
     with open(os.path.join(directory, name), encoding="utf-8") as handle:
         return handle.read()
@@ -178,6 +200,17 @@ def words(name):
     return [word for word in html.unescape(re.sub(r"<[^>]+>", " ", body)).split() if re.search(r"\w", word)]
 
 
+def page_url(name, site=SITE_URL):
+    """A page's canonical address: the home page's is the site's own address, not index.html."""
+    return site if name == HOME else site + name
+
+
+def filled(text, repo):
+    """A page as build.py fills it in for `repo` (<owner>/<name>): the repository, and the site's address."""
+    owner, name = repo.split("/")
+    return text.replace("OWNER/REPO", repo).replace(SITE_URL, f"https://{owner.lower()}.github.io/{name}/")
+
+
 class PageTests(unittest.TestCase):
     def test_there_are_pages(self):
         self.assertEqual(PAGES, ["changes.html", "faq.html", "first-launch.html", "index.html"])
@@ -195,15 +228,17 @@ class PageTests(unittest.TestCase):
                 self.assertTrue(named.get("description"))
                 policies = [attrs["content"] for attrs in metas if attrs.get("http-equiv") == "Content-Security-Policy"]
                 self.assertEqual(len(policies), 1)
-                self.assertIn("default-src 'none'", policies[0])
-                self.assertNotIn("script-src", policies[0])
+                self.assertEqual(policies[0], "default-src 'none'; img-src 'self'; "
+                                              f"script-src 'sha256-{script_hash(text)}'; base-uri 'none'; form-action 'none'")
                 self.assertTrue(page.title.strip())
                 links = [attrs for tag, attrs in page.elements if tag == "link"]
-                self.assertEqual(links, [{"rel": "icon", "href": "icon.png", "type": "image/png"}])
+                self.assertEqual(links, [{"rel": "canonical", "href": page_url(name)},
+                                         {"rel": "icon", "href": "icon.png", "type": "image/png"}])
 
     def test_unstyled(self):
         """The browser's own look, as web pages had in the 1990s: no stylesheet and no CSS of any kind (the CSP refuses
-        it as well), no classes, and no colour-scheme or theme-color tags, so the pages stay black on white."""
+        it as well), no classes and no theme-color. The colour-scheme tag lets the browser draw its own light or dark
+        look, following the system unless the theme switch says otherwise."""
         self.assertEqual([name for name in os.listdir(SITE) if name.endswith(".css")], [])
         for name in PAGES:
             with self.subTest(page=name):
@@ -212,9 +247,12 @@ class PageTests(unittest.TestCase):
                     self.assertNotIn("style", attrs)
                     self.assertNotIn("class", attrs)
                     if tag == "meta":
-                        self.assertNotIn(attrs.get("name"), ("color-scheme", "theme-color"))
+                        self.assertNotEqual(attrs.get("name"), "theme-color")
                         if attrs.get("http-equiv") == "Content-Security-Policy":
                             self.assertNotIn("style-src", attrs["content"])
+                schemes = [attrs for tag, attrs in parse(name).elements
+                           if tag == "meta" and attrs.get("name") == "color-scheme"]
+                self.assertEqual(schemes, [{"name": "color-scheme", "content": "light dark"}], "System by default")
 
     def test_structure_and_accessibility(self):
         for name in PAGES:
@@ -244,16 +282,23 @@ class PageTests(unittest.TestCase):
                     for target in attrs.get("aria-labelledby", "").split():
                         self.assertIn(target, page.ids)
 
-    def test_nothing_runs_and_nothing_loads_from_elsewhere(self):
+    def test_only_the_theme_switch_runs_and_nothing_loads_from_elsewhere(self):
         for name in PAGES:
             with self.subTest(page=name):
+                text = read(name)
+                scripts = [attrs for tag, attrs in parse(name).elements if tag == "script"]
+                self.assertEqual(scripts, [{}], "one inline script, without src or type")
+                head = block(text, "<head>", "</head>")
+                self.assertIn('<meta name="color-scheme" content="light dark">\n<script>', head,
+                              "the switch runs in <head>, right after the colour-scheme tag it sets")
+                self.assertEqual(theme_script(text), theme_script(read(HOME)), "the same script on every page")
                 for tag, attrs in parse(name).elements:
-                    self.assertNotIn(tag, ("script", "iframe", "object", "embed", "form", "base", "noscript"))
+                    self.assertNotIn(tag, ("iframe", "object", "embed", "form", "base", "noscript"))
                     self.assertEqual([key for key in attrs if key.startswith("on")], [])
                     for key in ("src", "srcset", "poster", "data", "background"):
                         if key in attrs:
                             self.assertNotRegex(attrs[key], r"^([a-z]+:|//)", "resources are the site's own")
-                    if tag == "link":
+                    if tag == "link" and attrs.get("rel") != "canonical":
                         self.assertNotRegex(attrs.get("href", ""), r"^([a-z]+:|//)")
 
     def test_links_resolve(self):
@@ -266,8 +311,11 @@ class PageTests(unittest.TestCase):
                 with self.subTest(page=name, href=href):
                     self.assertTrue(href)
                     if re.match(r"^[a-z]+:", href):
-                        self.assertTrue(href == REPOSITORY_URL or href.startswith(REPOSITORY_URL + "/"),
-                                        "external links go to the repository only")
+                        allowed = href == REPOSITORY_URL or href.startswith(REPOSITORY_URL + "/")
+                        if name == HOME and href == DEVELOPER_URL:
+                            allowed = True
+                        self.assertTrue(allowed, "external links go to the repository only (and the home page's "
+                                                 "developer credit to their profile)")
                         continue
                     target, _, fragment = href.partition("#")
                     target = target or name
@@ -318,6 +366,9 @@ class PageTests(unittest.TestCase):
         header = headers.pop()
         footer = footers.pop()
         self.assertRegex(header, r"<p>\[ .* \]</p>", "the header holds the navigation bar")
+        self.assertIn('<td align="right"><a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg">'
+                      '<img src="download.png" alt="" width="32" height="32" align="middle" hspace="4"><b>Download Warzag</b></a></td>',
+                      header, "every other page has Download at its top right")
         self.assertEqual(re.sub(r"<[^>]+>", "", re.search(r"<p>\[ .* \]</p>", header).group()), NAVIGATION_BAR)
         self.assertNotRegex(footer, r"<p>\[ .* \]</p>", "the navigation bar is at the top only")
         for sentence in ("Warzag is an unofficial community project.", "It is not " + DISCLAIMER,
@@ -356,6 +407,151 @@ class PageTests(unittest.TestCase):
                     self.assertNotIn(home, text)
 
 
+NODE_HARNESS = r"""
+// Runs the site's theme script against a stand-in page (meta, footer, storage) and reports what it did.
+const fs = require("fs");
+const source = fs.readFileSync(process.argv[2], "utf8");
+
+class Element {
+  constructor(tag) { this.tagName = tag; this.childNodes = []; this.attributes = {}; this.handlers = {}; this.text = null; }
+  appendChild(child) { this.childNodes.push(child); return child; }
+  removeChild(child) { this.childNodes.splice(this.childNodes.indexOf(child), 1); return child; }
+  get firstChild() { return this.childNodes[0] || null; }
+  setAttribute(name, value) { this.attributes[name] = String(value); }
+  getAttribute(name) { return name in this.attributes ? this.attributes[name] : null; }
+  addEventListener(type, handler) { (this.handlers[type] = this.handlers[type] || []).push(handler); }
+  set textContent(value) { this.childNodes = [textNode(value)]; }
+  get textContent() { return this.text !== null ? this.text : this.childNodes.map((child) => child.textContent).join(""); }
+}
+function textNode(value) { const node = new Element("#text"); node.text = String(value); return node; }
+function all(node, tag) { return [].concat(...node.childNodes.map((child) => (child.tagName === tag ? [child] : []).concat(all(child, tag)))); }
+
+function page(stored, storageWorks) {
+  const meta = new Element("meta");
+  meta.setAttribute("name", "color-scheme");
+  meta.setAttribute("content", "light dark");
+  const footer = new Element("footer");
+  const store = new Map(stored ? [["warzag-theme", stored]] : []);
+  const blocked = () => { throw new Error("storage is blocked"); };
+  const localStorage = storageWorks
+    ? { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => store.set(k, String(v)), removeItem: (k) => store.delete(k) }
+    : { getItem: blocked, setItem: blocked, removeItem: blocked };
+  const loaded = [];
+  const document = {
+    querySelector: (selector) => (selector === 'meta[name="color-scheme"]' ? meta : selector === "footer" ? footer : null),
+    createElement: (tag) => new Element(tag),
+    createTextNode: textNode,
+    addEventListener: (type, handler) => { if (type === "DOMContentLoaded") loaded.push(handler); },
+  };
+  new Function("document", "localStorage", source)(document, localStorage);
+  const beforeLoad = meta.getAttribute("content");
+  loaded.forEach((handler) => handler());
+  const state = () => ({
+    scheme: meta.getAttribute("content"),
+    line: footer.textContent,
+    current: all(footer, "b").map((b) => b.textContent),
+    links: all(footer, "a").map((a) => a.textContent),
+    stored: store.has("warzag-theme") ? store.get("warzag-theme") : null,
+  });
+  const click = (label) => {
+    const link = all(footer, "a").find((a) => a.textContent === label);
+    let prevented = false;
+    link.handlers.click.forEach((handler) => handler({ preventDefault: () => { prevented = true; } }));
+    return Object.assign(state(), { prevented });
+  };
+  return { beforeLoad, state, click };
+}
+
+const fresh = page(null, true);
+const saved = page("dark", true);
+const odd = page("blue", true);
+const blocked = page(null, false);
+const results = {
+  fresh: Object.assign(fresh.state(), { beforeLoad: fresh.beforeLoad }),
+  savedDark: Object.assign(saved.state(), { beforeLoad: saved.beforeLoad }),
+  odd: Object.assign(odd.state(), { beforeLoad: odd.beforeLoad }),
+  clickLight: fresh.click("Light"),
+  clickSystem: saved.click("System"),
+  blocked: Object.assign(blocked.state(), { beforeLoad: blocked.beforeLoad }),
+  blockedClickDark: blocked.click("Dark"),
+};
+process.stdout.write(JSON.stringify(results));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "the theme switch's behaviour test needs Node")
+class ThemeSwitchTests(unittest.TestCase):
+    """The theme script run in Node against a stand-in page: System by default, a saved Light or Dark applied before
+    the page is drawn, and the footer's Theme line saving and clearing the choice, also when storage is blocked."""
+
+    @classmethod
+    def setUpClass(cls):
+        with tempfile.TemporaryDirectory() as directory:
+            script = os.path.join(directory, "theme.js")
+            harness = os.path.join(directory, "harness.js")
+            with open(script, "w") as handle:
+                handle.write(theme_script(read(HOME)))
+            with open(harness, "w") as handle:
+                handle.write(NODE_HARNESS)
+            result = subprocess.run(["node", harness, script], capture_output=True, text=True, timeout=60)
+        if result.returncode:
+            raise AssertionError("the theme script failed in Node: " + result.stderr)
+        cls.results = json.loads(result.stdout)
+
+    def test_system_is_the_default(self):
+        fresh = self.results["fresh"]
+        self.assertEqual(fresh["beforeLoad"], "light dark")
+        self.assertEqual(fresh["line"], "Theme: [ Light | Dark | System ]")
+        self.assertEqual(fresh["current"], ["System"])
+        self.assertEqual(fresh["links"], ["Light", "Dark"])
+        self.assertIsNone(fresh["stored"])
+        self.assertEqual(self.results["odd"]["beforeLoad"], "light dark", "anything else saved means System")
+        self.assertEqual(self.results["odd"]["current"], ["System"])
+
+    def test_a_saved_choice_applies_before_the_page_is_drawn(self):
+        saved = self.results["savedDark"]
+        self.assertEqual(saved["beforeLoad"], "dark")
+        self.assertEqual(saved["current"], ["Dark"])
+        self.assertEqual(saved["links"], ["Light", "System"])
+
+    def test_the_switch_saves_and_clears_the_choice(self):
+        light = self.results["clickLight"]
+        self.assertTrue(light["prevented"])
+        self.assertEqual((light["scheme"], light["stored"], light["current"]), ("light", "light", ["Light"]))
+        system = self.results["clickSystem"]
+        self.assertEqual((system["scheme"], system["stored"], system["current"]), ("light dark", None, ["System"]))
+
+    def test_blocked_storage_still_switches_the_page(self):
+        blocked = self.results["blocked"]
+        self.assertEqual(blocked["beforeLoad"], "light dark")
+        dark = self.results["blockedClickDark"]
+        self.assertEqual((dark["scheme"], dark["current"], dark["stored"]), ("dark", ["Dark"], None))
+
+
+class DeveloperTests(unittest.TestCase):
+    def test_the_home_page_credits_the_developer_with_their_avatar(self):
+        text = read(HOME)
+        self.assertIn(f'<a href="{DEVELOPER_URL}"><img src="avatar.png" alt="" width="48" height="48"><br>MAlMazrou</a>',
+                      text)
+        with open(os.path.join(SITE, "avatar.png"), "rb") as handle:
+            data = handle.read()
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        width, height = struct.unpack(">II", data[16:24])
+        self.assertEqual((width, height), (96, 96))
+        self.assertLess(len(data), 64 * 1024)
+
+
+class DownloadArrowTests(unittest.TestCase):
+    def test_the_download_link_carries_the_arrow(self):
+        self.assertIn('<a href="https://github.com/OWNER/REPO/releases/latest/download/Warzag.dmg"><img src="download.png" '
+                      'alt="" width="64" height="64"><br><b>Download Warzag</b></a>', read(HOME))
+        with open(os.path.join(SITE, "download.png"), "rb") as handle:
+            data = handle.read()
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(struct.unpack(">II", data[16:24]), (128, 128))
+        self.assertLess(len(data), 16 * 1024)
+
+
 class IconTests(unittest.TestCase):
     def test_icon_is_a_small_square_png(self):
         with open(os.path.join(SITE, "icon.png"), "rb") as handle:
@@ -367,6 +563,76 @@ class IconTests(unittest.TestCase):
         self.assertGreaterEqual(width, 64)
         # Shown at 64 pixels on the home page and as the favicon: keep it light.
         self.assertLess(len(data), 64 * 1024)
+
+
+class SearchTests(unittest.TestCase):
+    """What search engines and link previews read: every page's own title and description, its canonical address,
+    and the Open Graph and X card tags with the preview image. Titles stay short enough to show whole in search
+    results, descriptions to show nearly whole."""
+
+    def metas(self, name):
+        """A page's meta tags with a name or an Open Graph property, by that name or property (each once)."""
+        pairs = [(attrs.get("property", attrs.get("name")), attrs.get("content")) for tag, attrs in parse(name).elements
+                 if tag == "meta" and ("property" in attrs or "name" in attrs)]
+        keys = [key for key, _ in pairs]
+        self.assertEqual(len(keys), len(set(keys)), f"{name}: each meta tag once")
+        return dict(pairs)
+
+    def test_every_page_has_its_title_description_and_preview(self):
+        titles = {parse(name).title for name in PAGES}
+        descriptions = {self.metas(name)["description"] for name in PAGES}
+        self.assertEqual(len(titles), len(PAGES), "every page has its own title")
+        self.assertEqual(len(descriptions), len(PAGES), "and its own description")
+        for name in PAGES:
+            with self.subTest(page=name):
+                title = parse(name).title
+                metas = self.metas(name)
+                self.assertIn("Warzag", title)
+                self.assertLessEqual(len(title), 60, "the whole title shows in search results")
+                self.assertGreaterEqual(len(metas["description"]), 70)
+                self.assertLessEqual(len(metas["description"]), 160, "search results show about 160 characters")
+                self.assertEqual(metas["og:url"], page_url(name))
+                self.assertEqual(metas["og:site_name"], "Warzag")
+                self.assertEqual(metas["og:image"], SITE_URL + "preview.png")
+                self.assertEqual((metas["og:image:width"], metas["og:image:height"]), ("1200", "630"),
+                                 "preview.png's size (test_the_preview_image)")
+                self.assertEqual(metas["twitter:card"], "summary_large_image")
+                for key in ("og:type", "og:title", "og:description", "og:image:alt"):
+                    self.assertTrue(metas.get(key), key)
+
+    def test_the_preview_image(self):
+        """preview.png, the image link previews show: 1200 x 630, the size Open Graph and X's large card use."""
+        with open(os.path.join(SITE, "preview.png"), "rb") as handle:
+            data = handle.read()
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(struct.unpack(">II", data[16:24]), (1200, 630))
+        self.assertLess(len(data), 256 * 1024)
+
+    def test_the_build_fills_in_the_address_and_writes_the_sitemap(self):
+        """The site's address is the one GitHub Pages serves it at (the owner in lowercase, as in its host name), and
+        sitemap.xml lists every page there, the home page as the address itself."""
+        build = load_build()
+        self.assertEqual(build.site_url("Test-Owner/warzag"), "https://test-owner.github.io/warzag/")
+        self.assertEqual(build.site_url("Test-Owner/Test-Owner.github.io"), "https://test-owner.github.io/")
+        address = "https://test-owner.github.io/warzag/"
+        with tempfile.TemporaryDirectory() as directory:
+            out = os.path.join(directory, "out")
+            result = run_build("--repo", "Test-Owner/warzag", "--out", out)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            namespace = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+            root = xml.etree.ElementTree.parse(os.path.join(out, "sitemap.xml")).getroot()
+            self.assertEqual(root.tag, f"{namespace}urlset")
+            self.assertEqual(sorted(location.text for location in root.iter(f"{namespace}loc")),
+                             sorted(page_url(name, address) for name in PAGES))
+            for name in PAGES:
+                with self.subTest(page=name):
+                    text = read(name, out)
+                    self.assertNotIn("OWNER", text)
+                    self.assertIn(f'<link rel="canonical" href="{page_url(name, address)}">', text)
+        for broken in ('<link rel="canonical" href="https://OWNER.github.io/REPO">',
+                       '<meta property="og:image" content="https://owner.github.io/REPO/preview.png">'):
+            with self.subTest(text=broken), self.assertRaisesRegex(build.BuildError, "OWNER.github.io outside"):
+                build.check_placeholders("page.html", broken)
 
 
 def run_build(*args, github_output=None):
@@ -474,7 +740,7 @@ class BuildTests(unittest.TestCase):
         result = run_build("--repo", "test-owner/warzag.site", "--out", self.out)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(sorted(os.listdir(self.out)), PUBLISHED)
-        self.assertEqual(read(HOME, self.out), read(HOME).replace("OWNER/REPO", "test-owner/warzag.site"),
+        self.assertEqual(read(HOME, self.out), filled(read(HOME), "test-owner/warzag.site"),
                          "the build changes nothing else on the home page")
         for name in PAGES:
             text = read(name, self.out)
@@ -482,7 +748,7 @@ class BuildTests(unittest.TestCase):
             self.assertIn("https://github.com/test-owner/warzag.site", text)
             for tag, attrs in parse(name, self.out).elements:
                 href = attrs.get("href", "") if tag == "a" else ""
-                if href.startswith("https://"):
+                if href.startswith("https://") and href != DEVELOPER_URL:
                     self.assertTrue(href.startswith("https://github.com/test-owner/warzag.site"))
         self.assertIn('href="https://github.com/test-owner/warzag.site/releases/latest/download/Warzag.dmg"',
                       read("index.html", self.out))
@@ -696,7 +962,7 @@ class ChangesTests(unittest.TestCase):
 
     def frame(self):
         """changes.html with the repository filled in, split at its marked region: (before, inside, after)."""
-        before, rest = read(CHANGES).replace("OWNER/REPO", "o/r").split(self.build.RELEASES_BEGIN)
+        before, rest = filled(read(CHANGES), "o/r").split(self.build.RELEASES_BEGIN)
         inside, after = rest.split(self.build.RELEASES_END)
         return before, inside, after
 
@@ -718,7 +984,7 @@ class ChangesTests(unittest.TestCase):
         for name in PAGES:
             if name != CHANGES:
                 with self.subTest(page=name):
-                    self.assertEqual(read(name, out), read(name).replace("OWNER/REPO", "o/r"))
+                    self.assertEqual(read(name, out), filled(read(name), "o/r"))
 
     def test_the_list_keeps_the_page_rules(self):
         """Headings in order below the page's h1, an anchor for each version (changes.html#v0.2.0), and plain

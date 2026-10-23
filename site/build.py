@@ -5,9 +5,12 @@ deployable copy.
     python3 -I site/build.py --repo <owner>/<name> --out <dir> [--fetch-release [--release-base <url>]]
                              [--changelog <file>]
 
-The pages in site/ name the GitHub repository with the literal text OWNER/REPO, always right after "github.com/"
-(site/README.md). This script copies the published files (the .html, .css and .png files; not itself or the README)
-into --out, with OWNER/REPO replaced by --repo. In changes.html, the region from the "<!-- releases: ... -->" line to
+The pages in site/ name the GitHub repository with the literal text OWNER/REPO, always right after "github.com/",
+and their own address with the literal text https://OWNER.github.io/REPO/ (site/README.md). This script copies the
+published files (the .html, .css and .png files; not itself or the README) into --out, with OWNER/REPO replaced by
+--repo and https://OWNER.github.io/REPO/ by the address GitHub Pages serves the site at,
+https://<owner>.github.io/<name>/, and writes sitemap.xml there, listing every page at that address for search
+engines. In changes.html, the region from the "<!-- releases: ... -->" line to
 the "<!-- /releases -->" line becomes the released sections of CHANGELOG.md (with --fetch-release, only those already
 out), newest first: each version with its date and its Major, Minor and Bug fixes entries, escaped, with `code` as
 <code>. Before the first release, only the text inside the region stays. The changelog is read with
@@ -53,6 +56,9 @@ SITE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SITE)
 PUBLISHED_EXTENSIONS = (".html", ".css", ".png")
 PLACEHOLDER = "OWNER/REPO"
+# The site's own address, in the canonical links and the link-preview tags.
+SITE_URL_PLACEHOLDER = "https://OWNER.github.io/REPO/"
+SITEMAP = "sitemap.xml"
 CHANGELOG = os.path.join(ROOT, "CHANGELOG.md")
 CHANGES_PAGE = "changes.html"
 RELEASES_BEGIN = "<!-- releases: site/build.py fills this in from CHANGELOG.md -->\n"
@@ -255,11 +261,23 @@ def fetch_release(base):
     return published, version
 
 
+def site_url(repo):
+    """The address GitHub Pages serves the site at: https://<owner>.github.io/<name>/, with the owner in lowercase as
+    in the host name GitHub gives it, or https://<owner>.github.io/ for the repository named <owner>.github.io."""
+    owner, name = repo.split("/")
+    host = f"{owner.lower()}.github.io"
+    return f"https://{host}/" if name.lower() == host else f"https://{host}/{name}/"
+
+
 def check_placeholders(name, text):
     for match in re.finditer(re.escape(PLACEHOLDER), text):
         if not text[:match.start()].endswith("github.com/"):
             line = text.count("\n", 0, match.start()) + 1
             raise BuildError(f"{name}:{line}: {PLACEHOLDER} outside a github.com/ URL")
+    # Each OWNER.github.io, in any case, must be part of a whole https://OWNER.github.io/REPO/, which is what gets
+    # replaced.
+    if text.lower().count("owner.github.io") != text.count(SITE_URL_PLACEHOLDER):
+        raise BuildError(f"{name}: OWNER.github.io outside {SITE_URL_PLACEHOLDER}")
 
 
 def read_releases(path, name):
@@ -334,6 +352,15 @@ def fill_releases(text, releases):
     return before + (releases_html(releases) if releases else no_release) + after
 
 
+def sitemap_xml(url, pages):
+    """sitemap.xml: every page at the site's address, the home page as the address itself, as its canonical link
+    names it."""
+    locations = [url] + [url + page for page in pages if page != "index.html"]
+    entries = "".join(f"<url><loc>{html.escape(location)}</loc></url>\n" for location in locations)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}</urlset>\n')
+
+
 def render(repo, releases):
     """{published file name: bytes} for the whole site."""
     names = sorted(name for name in os.listdir(SITE)
@@ -341,7 +368,8 @@ def render(repo, releases):
     for page in ("index.html", CHANGES_PAGE):
         if page not in names:
             raise BuildError(f"site/{page} is missing")
-    files = {}
+    url = site_url(repo)
+    files = {SITEMAP: sitemap_xml(url, [name for name in names if name.endswith(".html")]).encode("utf-8")}
     for name in names:
         with open(os.path.join(SITE, name), "rb") as handle:
             data = handle.read()
@@ -352,7 +380,7 @@ def render(repo, releases):
             continue
         text = data.decode("utf-8")
         check_placeholders(name, text)
-        text = text.replace(PLACEHOLDER, repo)
+        text = text.replace(PLACEHOLDER, repo).replace(SITE_URL_PLACEHOLDER, url)
         # Only after OWNER/REPO is replaced, so the changelog's text is never changed.
         if name == CHANGES_PAGE:
             text = fill_releases(text, releases)
@@ -372,7 +400,8 @@ def write(out, files):
         for entry in os.listdir(out):
             path = os.path.join(out, entry)
             name = entry[1:-len(".part")] if entry.startswith(".") and entry.endswith(".part") else entry
-            if not name.endswith(PUBLISHED_EXTENSIONS) or os.path.islink(path) or not os.path.isfile(path):
+            published = name.endswith(PUBLISHED_EXTENSIONS) or name == SITEMAP
+            if not published or os.path.islink(path) or not os.path.isfile(path):
                 raise BuildError(f"--out holds {entry!r}, so it is not an earlier build's output; use an empty "
                                  "directory")
         for entry in os.listdir(out):
